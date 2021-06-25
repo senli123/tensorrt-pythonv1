@@ -1,0 +1,11 @@
+{
+    "python.linting.pylintArgs": [
+        "/home/lisen/.local/lib/python3.7/site-packages/pylint",
+        "--errors-only",
+        "--disable=E1101",
+        "--disable=E1121",
+        "--disable=W,C",
+        "--disable=bad-option-value"],
+        
+        
+}

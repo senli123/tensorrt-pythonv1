@@ -1,0 +1,6 @@
+*.trt
+*.onnx
+*.pyc
+*.bmp
+*.jpg
+*.png
