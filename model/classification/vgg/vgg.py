@@ -5,7 +5,7 @@ from TensorRT.Infer_Interface_TensorRT import Infer_TensorRT as Infer_Interface
 import numpy as np
 import cv2
 from PIL import Image
-class Alexnet:
+class Vgg16:
     def __init__(self,preprocessor_args,postprocessor_args,model_args):
         self.pre = Preprocess(**preprocessor_args)
         self.Infer = Infer_Interface(**model_args)
@@ -56,9 +56,9 @@ if __name__ == '__main__':
             "mean_list":[0.485, 0.456, 0.406],
             "std_list":[0.229, 0.224, 0.225],},
         { "output_shape":[1,1000]},
-        { "trt_path":"./net/alexnet.trt",
+        { "trt_path":"./net/vgg16.trt",
             "gpuID":0}]
-    class_model = Alexnet(Params[0], Params[1], Params[2])
+    class_model = Vgg16(Params[0], Params[1], Params[2])
     #img = cv2.imread("./data/img.jpg")
     input_image = Image.open("./data/img2.jpg")
     output = class_model.model_infer(input_image)
