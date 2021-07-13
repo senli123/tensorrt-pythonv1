@@ -5,7 +5,7 @@ from TensorRT.Infer_Interface_TensorRT import Infer_TensorRT as Infer_Interface
 import numpy as np
 import cv2
 from PIL import Image
-class Alexnet:
+class Densenet:
     def __init__(self,preprocessor_args,postprocessor_args,model_args):
         self.pre = Preprocess(**preprocessor_args)
         self.Infer = Infer_Interface(**model_args)
@@ -43,7 +43,7 @@ class Postprocess:
     def process(self, output):
         output = output[0].reshape(self.output_shape)
         output = self.softmax(output,1)
-        output = np.argmax(output)
+        output = np.argmax(output,axis=1)
         return output
     def softmax(self, x, axis=None):
         x = x - x.max(axis=axis, keepdims=True)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         { "output_shape":[1,1000]},
         { "trt_path":"./net/trt/alexnet.trt",
             "gpuID":0}]
-    class_model = Alexnet(Params[0], Params[1], Params[2])
+    class_model = Densenet(Params[0], Params[1], Params[2])
     #img = cv2.imread("./data/img.jpg")
     input_image = Image.open("./data/img2.jpg")
     output = class_model.model_infer(input_image)

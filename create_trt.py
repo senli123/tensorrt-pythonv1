@@ -30,10 +30,10 @@ def build_trx(model_path,OnnxFileName,batch_size,shape,TrtFileName):
                 f.write(engine.serialize())
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument("--net_path", type=str, default="./net")
-    parser.add_argument("--onnx_name", type=str, default="alexnet.onnx")
+    parser.add_argument("--net_path", type=str, default="./net/onnx")
+    parser.add_argument("--onnx_name", type=str, default="unet.onnx")
     parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('--shape', type=list, default=[1,3,224,224])
+    parser.add_argument('--shape', type=list, default=[1,3, 672,816,])
     args = parser.parse_args()
     net_path = args.net_path
     onnx_name = args.onnx_name

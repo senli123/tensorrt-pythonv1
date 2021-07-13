@@ -5,3 +5,8 @@
 *.jpg
 *.png
 *.pth
+*.wts
+*.engine
+*.txt
+*.xml
+*.JPEG

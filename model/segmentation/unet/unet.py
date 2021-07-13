@@ -13,50 +13,59 @@ class Alexnet:
     def model_infer(self, bgr_img):
         input_data= self.pre.process(bgr_img)  #输出input_data为(1,c,h,w)
         trt_outputs = self.Infer.infer(input_data)
-        category = self.post.process(trt_outputs)
-        return category
+        mask = self.post.process(trt_outputs)
+        return mask
     def model_destory(self,):
         self.Infer.destory()
 
 class Preprocess:
-    def __init__(self, input_resolution, mean_list,std_list):
-        self.input_resolution = input_resolution
-        self.mean_array = np.array(mean_list, dtype= np.float32) * 255
-        self.std_array = np.reciprocal(np.array(std_list, dtype= np.float32)* 255, dtype=np.float32)
+    def __init__(self, scale):
+        self.scale = scale
     def process(self, rgb_img):
-        #img = cv2.resize(rgb_img,(self.input_resolution,self.input_resolution), interpolation=cv2.INTER_LINEAR)
-        img = rgb_img.resize((self.input_resolution, self.input_resolution))
+        w, h = rgb_img.size
+        newW, newH = int(self.scale * w), int(self.scale * h)
+        assert newW > 0 and newH > 0, 'Scale is too small'
+        img = rgb_img.resize((newW, newH))
         input_data = self._normalize(img)
         return input_data
     def _normalize(self, image_array):
         image_array = np.array(image_array, dtype=np.float32, order='C')
-        image_array -= self.mean_array
-        image_array *= self.std_array
+        image_array = image_array /255
         image_array = np.transpose(image_array, [2,0,1])
         image_array = np.expand_dims(image_array, axis=0)
         image_array = np.array(image_array, dtype=np.float32, order='C')
         return image_array
 
 class Postprocess:
-    def __init__(self, output_shape):
-        self.output_shape = output_shape
-    def process(self, output):
-        output = output[0].reshape(self.output_shape)
-        output = self.softmax(output,1)
-        output = np.argmax(output)
-        return output
+    def __init__(self, scale, class_num, out_threshold):
+        self.scale = scale
+        self.class_num = class_num
+        self.out_threshold = out_threshold
+    def process(self, output, rgb_img):
+        w, h = rgb_img.size
+        newW, newH = int(self.scale * w), int(self.scale * h)
+        assert newW > 0 and newH > 0, 'Scale is too small'
+        output = output[0].reshape(1,self.class_num, newW, newH)
+        if self.class_num > 1:
+            mask = self.softmax(output, 1)
+        else:
+            mask = self.sigmoid(output)
+        return mask > self.out_threshold
     def softmax(self, x, axis=None):
         x = x - x.max(axis=axis, keepdims=True)
         y = np.exp(x)
         return y / y.sum(axis=axis, keepdims=True)
+    def sigmoid(x):
+        return 1/(1+np.exp(-x))
+3
 
 if __name__ == '__main__':
     Params = [
-        {"input_resolution":224,
-            "mean_list":[0.485, 0.456, 0.406],
-            "std_list":[0.229, 0.224, 0.225],},
-        { "output_shape":[1,1000]},
-        { "trt_path":"./net/trt/alexnet.trt",
+        {"scale": 1},
+        { "scale": 1,
+         "class_num": 1, 
+         "out_threshold": 0.5},
+        { "trt_path":"./net/alexnet.trt",
             "gpuID":0}]
     class_model = Alexnet(Params[0], Params[1], Params[2])
     #img = cv2.imread("./data/img.jpg")

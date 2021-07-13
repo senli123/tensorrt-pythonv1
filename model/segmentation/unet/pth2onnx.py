@@ -9,7 +9,7 @@ def main():
     net.load_state_dict(torch.load(os.getcwd()+'/net/pth/unet_carvana_scale1_epoch5.pth', map_location='cuda:0'))
     net.eval()
     tmp = torch.ones(1,3,224,224).to('cuda:0')
-    torch.onnx.export(net, tmp, './net/onnx/unet.onnx',opset_version=11)
+    torch.onnx.export(net, tmp, './net/onnx/unet1.onnx',opset_version=11)
 
 if __name__ == '__main__':
     main()
