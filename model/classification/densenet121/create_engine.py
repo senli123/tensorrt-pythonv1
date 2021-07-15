@@ -162,14 +162,16 @@ def create_engine(builder, config, dt, INPUT_BLOB_NAME, OUTPUT_BLOB_NAME, max_ba
 
 
 def API_to_model(INPUT_BLOB_NAME, OUTPUT_BLOB_NAME, BATCH_SIZE, INPUT_H, INPUT_W, OUTPUT_SIZE, 
-                WEIGHT_PATH, ENGINE_PATH, DATA_TYPE, DATA_SET, LABEL_SET, CACHE_FILE, MEAN, STD):
-    cailb = DenseNetEntropyCailbrator.get_data(DATA_SET,CACHE_FILE,BATCH_SIZE, MEAN, STD)
+                WEIGHT_PATH, ENGINE_PATH, DATA_TYPE, FILE_PATH, DATA_SET, LABEL_SET, CACHE_FILE, MEAN, STD):
+    loader.process_data( FILE_PATH, DATA_SET, LABEL_SET, INPUT_H, MEAN, STD)
+    dataset = loader()
+    cailb = DenseNetEntropyCailbrator.get_data(dataset.load_data(),CACHE_FILE,BATCH_SIZE)
     builder = trt.Builder(TRT_LOGGER)
     config = builder.create_builder_config()
     with create_engine(builder, config, trt.float32, INPUT_BLOB_NAME, OUTPUT_BLOB_NAME, 
                         BATCH_SIZE, INPUT_H, INPUT_W, OUTPUT_SIZE, WEIGHT_PATH,DATA_TYPE, 
                         cailb) as engine, engine.create_execution_context() as context:
-        check_accuracy(context, BATCH_SIZE, test_set=load_data(DATA_SET, MEAN, STD), test_labels=load_labels(LABEL_SET),output_size=OUTPUT_SIZE)
+        check_accuracy(context, BATCH_SIZE, test_set = dataset.load_data(), test_labels=dataset.load_labels(), output_size=OUTPUT_SIZE)
         with open(ENGINE_PATH, "wb") as f:
             f.write(engine.serialize())
         del engine
@@ -187,6 +189,7 @@ if __name__ == '__main__':
     parser.add_argument("-wpath","--weight_path", type = str, default = "./densenet121.wts")
     parser.add_argument("-epath","--engine_path", type = str, default = "./densenet121.engine")
     parser.add_argument("-t", "--engine_datatype",help="Optional.fp32,fp16,int8",type = str, default = "fp32")
+    parser.add_argument("-f", "--file_path",type = str, default = None)
     parser.add_argument("-d", "--data_set",type = str, default = None)
     parser.add_argument("-l", "--label_set",type = str, default = None)
     parser.add_argument("-c", "--cache_file",type = str, default = None)
@@ -202,11 +205,12 @@ if __name__ == '__main__':
     WEIGHT_PATH = args.weight_path
     ENGINE_PATH = args.engine_path
     DATA_TYPE = args.engine_datatype
+    FILE_PATH = args.file_path
     DATA_SET = args.data_set
     LABEL_SET = args.label_set
     CACHE_FILE = args.cache_file
     MEAN = args.mean_list
     STD = args.std_list
     API_to_model(INPUT_BLOB_NAME, OUTPUT_BLOB_NAME, BATCH_SIZE, INPUT_H, INPUT_W, OUTPUT_SIZE,
-                WEIGHT_PATH, ENGINE_PATH, DATA_TYPE, DATA_SET, LABEL_SET, CACHE_FILE, MEAN, STD)
+                WEIGHT_PATH, ENGINE_PATH, DATA_TYPE, FILE_PATH, DATA_SET, LABEL_SET, CACHE_FILE, MEAN, STD)
     

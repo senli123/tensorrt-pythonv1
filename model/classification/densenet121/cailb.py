@@ -2,26 +2,37 @@ from utils.calibrator import Int8EntropyCalibrator
 from TensorRT import common
 import time
 import numpy as np
+import os 
+import pickle
+from PIL import Image
 from densenet import Preprocess, Postprocess
 class DenseNetEntropyCailbrator(Int8EntropyCalibrator):
     @classmethod
-    def get_data(cls, test_set,cache_file, batch_size, MEAN, STD):
-        training_data = load_data(test_set, MEAN, STD)
+    def get_data(cls, training_data, cache_file, batch_size):
         cailb=cls(training_data, cache_file, batch_size)
         #返回的是一个初始化后的类
         return cailb
 
 class loader():
-    def __init__(self, data_set, label_set, input_resolution, mean_list, std_list):
-        self.data_set = data_set
-        self.label_set = label_set
-        self.preprocess = Preprocess(input_resolution, mean_list, std_list)
-def load_data():
-    
-    print("load_data")
-
-def load_labels():
-    print("load_data")
+    @classmethod
+    def process_data(cls, file_path, data_set, label_set, input_resolution, mean_list, std_list):
+        cls.preprocess = Preprocess(input_resolution, mean_list, std_list)
+        data_file = os.path.join(file_path, data_set)
+        label_file = os.path.join(file_path,label_set)
+        with open(data_file, 'rb') as Dfile:   
+            name_list = pickle.load(Dfile)
+        with open(label_file, 'rb') as Lfile:   
+            label_list = pickle.load(Lfile)
+        cls.img_data = np.zeros([len(name_list), 3, input_resolution, input_resolution],dtype=np.float32)
+        for index, img_name in enumerate(name_list):
+            img = Image.open(img_name)
+            img = cls.preprocess.process(img)
+            cls.img_data[index] = img
+        cls.label = np.array(label_list)
+    def load_data(self,):
+        return self.img_data
+    def load_labels(self,):
+        return self.label
 
 def check_accuracy(context, batch_size, test_set, test_labels,output_size):
     print("check_accuracy")
