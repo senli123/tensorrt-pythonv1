@@ -7,7 +7,7 @@
 *.pth
 *.wts
 *.engine
-*.txt
+*.pickle
 *.xml
 *.JPEG
 /bin/
