@@ -46,8 +46,8 @@ def load_weights(file):
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='densenet121.pth', help='pytorch weights model.pth path(s)')
-    parser.add_argument('--save-trt-weights', type=str, default='densenet121.wts', help='save path for tensorrt weights')
+    parser.add_argument('--weights', nargs='+', type=str, default='./model_zoo/pth/mobilenet_v2.pth', help='pytorch weights model.pth path(s)')
+    parser.add_argument('--save-trt-weights', type=str, default='./model_zoo/wts/mobilenet_v2.wts', help='save path for tensorrt weights')
     opt = parser.parse_args()
     print(opt)
     generate_weights(opt)
