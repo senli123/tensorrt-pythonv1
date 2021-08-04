@@ -76,7 +76,8 @@
         "queue": "cpp",
         "stack": "cpp",
         "__functional_03": "cpp",
-        "dete_utils.h": "c"
+        "dete_utils.h": "c",
+        "mobilenetv2_data.h": "c"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",

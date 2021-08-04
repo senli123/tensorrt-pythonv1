@@ -42,35 +42,50 @@ message(STATUS "Find TensorRT libs: ${TENSORRT_LIBRARY}")
 find_package(OpenCV REQUIRED)
 message(STATUS "Find OpenCV include at ${OpenCV_INCLUDE_DIRS}")
 message(STATUS "Find OpenCV libraries: ${OpenCV_LIBRARIES}")
-#--------------------加入头文件--------------------------------
-#底层接口相关
-include_directories(${PROJECT_SOURCE_DIR}/TensorRT)
-#utils相关
-include_directories(${PROJECT_SOURCE_DIR}/utils)
-include_directories(${PROJECT_SOURCE_DIR}/model/detection)
-#模型相关
-include_directories(${PROJECT_SOURCE_DIR}/model/detection/yolov5)
-# include_directories(${PROJECT_SOURCE_DIR}/model/include/segmentation)
-# include_directories(${PROJECT_SOURCE_DIR}/model/include/segmentation/Unet)
-#include_directories(${PROJECT_SOURCE_DIR}/model/include/classification/LJclassify)
-#service 相关
-include_directories(${PROJECT_SOURCE_DIR}/service/yolov5)
-#--------------------第三方头文件-----------------------------
-include_directories(${TENSORRT_INCLUDE_DIR} ${OpenCV_INCLUDE_DIRS} ${CUDA_INCLUDE_DIRS})
-#--------------------加入源文件---------------------------------
-aux_source_directory(. SRC_LIST)
-aux_source_directory(${PROJECT_SOURCE_DIR}/TensorRT DIR_TensorRT_SRCS)
-aux_source_directory(${PROJECT_SOURCE_DIR}/model/detection DIR_DETE_SRCS)
-aux_source_directory(${PROJECT_SOURCE_DIR}/model/detection/yolov5 DIR_YOLOV5_SRCS)
-#aux_source_directory(${PROJECT_SOURCE_DIR}/model/src/classification/LJclassify DIR_LJ_SRCS)
-# aux_source_directory(${PROJECT_SOURCE_DIR}//model/src/segmentation DIR_SEG_SRCS)
-# aux_source_directory(${PROJECT_SOURCE_DIR}//model/src/segmentation/Unet DIR_UNET_SRCS)
-aux_source_directory(${PROJECT_SOURCE_DIR}/service/yolov5 DIR_SERVICE_SRCS)
-add_executable(demo ${SRC_LIST} ${DIR_SERVICE_SRCS} ${DIR_TensorRT_SRCS} ${DIR_DETE_SRCS}  ${DIR_YOLOV5_SRCS}  ${DIR_LJ_SRCS}
-)
-#-------------------链接库--------------------------------------
-target_link_libraries(demo ${CUDA_LIBRARIES})
-target_link_libraries(demo /usr/local/cuda/lib64/libnvrtc.so.10.2)
-target_link_libraries(demo ${OpenCV_LIBRARIES}  ${TENSORRT_LIBRARY} )
 
+#--------------------glog---------------------------------
+set(glog_INCLUDE_DIR "/workspace/lisen/_bushu/lisen/glog/build")
+set(glog_LIBRARIES "/workspace/lisen/_bushu/lisen/glog/build/libglog.so")
+
+#---------------加入所有源文件-------------------------------
+file(GLOB_RECURSE SRC_MOPDEL_FILES
+    ${CMAKE_SOURCE_DIR}/model/*.cpp
+)
+file(GLOB_RECURSE SRC_INTERFACE_FILES
+    ${CMAKE_SOURCE_DIR}/TensorRT/*.cpp
+)
+file(GLOB_RECURSE SRC_SERVICE_FILES
+    ${CMAKE_SOURCE_DIR}/service/*.cpp
+)
+file(GLOB_RECURSE SRC_UTILS_FILES
+    ${CMAKE_SOURCE_DIR}/utils/*.cpp
+)
+add_library(TensorrtEngine STATIC ${SRC_INTERFACE_FILES} ${SRC_MOPDEL_FILES} ${SRC_SERVICE_FILES} ${SRC_UTILS_FILES})   #添加src路径下的所有cpp
+#-------------------链接库--------------------------------------
+target_link_libraries(TensorrtEngine 
+                        PUBLIC ${CUDA_LIBRARIES} 
+                        /usr/local/cuda/lib64/libnvrtc.so.10.2
+                        ${OpenCV_LIBRARIES}  
+                        ${TENSORRT_LIBRARY}
+                        ${glog_LIBRARIES})
+#--------------------加入头文件--------------------------------
+target_include_directories(TensorrtEngine 
+                        PUBLIC  ${TENSORRT_INCLUDE_DIR} 
+                                ${OpenCV_INCLUDE_DIRS} 
+                                ${CUDA_INCLUDE_DIRS}
+                                ${glog_INCLUDE_DIR}
+                                ${PROJECT_SOURCE_DIR}/TensorRT #底层接口相关
+                                ${PROJECT_SOURCE_DIR}/utils #utils相关
+                                ${PROJECT_SOURCE_DIR}/model/detection
+                                ${PROJECT_SOURCE_DIR}/model/detection/yolov5
+                                ${PROJECT_SOURCE_DIR}/service/yolov5
+                                ${PROJECT_SOURCE_DIR}/model/classification
+                                ${PROJECT_SOURCE_DIR}/model/classification/mobilenet/mobilenetv2)
+
+# if(MIRROR_BUILD_CLASSIFIER)
+#         add_executable(demo ${CMAKE_SOURCE_DIR}/src/test_classification_debug.cpp)
+#         target_link_libraries(demo PUBLIC TensorrtEngine)
+# endif()
+add_executable(demo ${CMAKE_SOURCE_DIR}/src/test_classification_debug.cpp)
+target_link_libraries(demo PUBLIC TensorrtEngine)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)

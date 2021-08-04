@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(demo)
+project(TensorrtEngine)
 set(CMAKE_BUILD_TYPE "Debug")
+Option(MIRROR_BUILD_CLASSIFIER "build classifier test" ON)
 add_subdirectory(src)

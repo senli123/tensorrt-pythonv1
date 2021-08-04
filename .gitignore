@@ -12,3 +12,5 @@
 *.JPEG
 /bin/
 /build/
+/log/
+/debug/
