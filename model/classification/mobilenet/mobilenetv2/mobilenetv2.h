@@ -4,6 +4,7 @@
 #include "classification_utils.h"
 #include <opencv2/opencv.hpp>
 #include <glog/logging.h>
+#include "tools.h"
 class MobilenetV2 :public TensorRT_Interface
 {
 public:

@@ -77,7 +77,10 @@
         "stack": "cpp",
         "__functional_03": "cpp",
         "dete_utils.h": "c",
-        "mobilenetv2_data.h": "c"
+        "mobilenetv2_data.h": "c",
+        "my_log.h": "c",
+        "tools.h": "c",
+        "locale": "cpp"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",

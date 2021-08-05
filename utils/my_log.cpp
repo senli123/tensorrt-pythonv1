@@ -2,8 +2,11 @@
 #include <sys/types.h>  
 #include <sys/stat.h>  
 #include <unistd.h>
-bool CreateDirRecursively(std::string &directory)
+bool CreateDirRecursively(std::string &directory, char* flag)
 {
+    char *buffer;
+    buffer = getcwd(NULL, 0);
+    directory = buffer;
     std::string s_time = "";
     char psDate[128] = { 0 };
     time_t nSeconds;
@@ -16,7 +19,7 @@ bool CreateDirRecursively(std::string &directory)
     sprintf(psDate,"%04d-%02d-%02d", 
             pTM->tm_year + 1900, pTM->tm_mon + 1, pTM->tm_mday);
     s_time.append(psDate);
-    directory.append("/log/");
+    directory.append(flag);
     if (access(directory.c_str(),F_OK)!=0)
     {
         if(mkdir(directory.c_str(), S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR|S_IWGRP|S_IWOTH) == -1)
@@ -41,10 +44,8 @@ bool InitLogger(const char* logPrefix )
 {
     //创建文件夹返回路径
     std::string path;
-    char *buffer;
-    buffer = getcwd(NULL, 0);
-    path = buffer;
-    if(!CreateDirRecursively(path)){
+
+    if(!CreateDirRecursively(path,"/log/")){
         printf("mkdir log dir failed !\n");
         return false;
     }

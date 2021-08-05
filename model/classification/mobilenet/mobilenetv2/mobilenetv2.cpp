@@ -38,6 +38,7 @@ bool MobilenetV2::Model_Infer(std::vector<cv::Mat> &bgr_imgs, std::vector<image_
 		}
     }
     LOG(INFO)<<"[MobilenetV2::Model_Infer] PreProcess succeed!";
+    Debug_utils::set_time(PREPROCESS);
     LOG(INFO)<<"[MobilenetV2::Model_Infer] infer start!";
     if (!TensorRT_Interface::infer())  //对图片进行推断
 	{
@@ -45,6 +46,7 @@ bool MobilenetV2::Model_Infer(std::vector<cv::Mat> &bgr_imgs, std::vector<image_
         return false;
 	}
     LOG(INFO)<<"[MobilenetV2::Model_Infer] infer succeed!";
+    Debug_utils::set_time(INFER);
     LOG(INFO)<<"[MobilenetV2::Model_Infer] Postprocess start!";
     if (!PostProcess(outputinfo))
     {
@@ -52,6 +54,7 @@ bool MobilenetV2::Model_Infer(std::vector<cv::Mat> &bgr_imgs, std::vector<image_
 		return false;
     }
     LOG(INFO)<<"[MobilenetV2::Model_Infer] Postprocess succeed!";
+    Debug_utils::set_time(POSTPROCESS);
     return true;
     
     

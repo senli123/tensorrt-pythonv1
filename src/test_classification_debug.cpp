@@ -2,12 +2,15 @@
 #include "mobilenetv2.h"
 #include "alglogger.h"
 #include "my_log.h"
+#include "tools.h"
 int main(int, char**) {
     if(!InitLogger("mobilenet"))
     {
 
         return -1;
     }
+    Debug_utils utils;
+    utils.init("mobilenet");
     cv::Mat img = cv::imread("/workspace/lisen/_bushu/tensorrt-python/data/img2.jpg");
     if (img.empty())
     {
@@ -26,12 +29,16 @@ int main(int, char**) {
         LOG(ERROR)<<"build failed!";
         return -1;
     }
+    Debug_utils::set_time(START);
     err = mobilenetv2.Model_Infer(bgr_imgs,outputinfo);
     if (!err)
     {
         LOG(ERROR)<<"Infer failed!";
         return -1;
     }
+    Debug_utils::set_time(END);
+    utils.save_time_path();
+    utils.mean_time();
     for (size_t i = 0; i < outputinfo.size(); i++)
     {
         image_info info = outputinfo[i];
