@@ -22,7 +22,12 @@ bool CreateDirRecursively(std::string &directory, char* flag)
     directory.append(flag);
     if (access(directory.c_str(),F_OK)!=0)
     {
-        if(mkdir(directory.c_str(), S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR|S_IWGRP|S_IWOTH) == -1)
+        // if(mkdir(directory.c_str(), S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR|S_IWGRP|S_IWOTH) == -1)
+        // {
+        //     printf("mkdir(%s) failed(%s)\n",directory.c_str(), strerror(errno));
+        //     return false;
+        // }
+        if(mkdir(directory.c_str(), 0777) == -1)
         {
             printf("mkdir(%s) failed(%s)\n",directory.c_str(), strerror(errno));
             return false;
@@ -32,7 +37,12 @@ bool CreateDirRecursively(std::string &directory, char* flag)
 	directory.append("/");
     if (access(directory.c_str(),F_OK)!=0)
     {
-        if(mkdir(directory.c_str(), S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR|S_IWGRP|S_IWOTH) == -1)
+        // if(mkdir(directory.c_str(), S_IRUSR|S_IRGRP|S_IROTH|S_IWUSR|S_IWGRP|S_IWOTH) == -1)
+        // {
+        //     printf("mkdir(%s) failed(%s)\n",directory.c_str(), strerror(errno));
+        //     return false;
+        // }
+        if(mkdir(directory.c_str(), 0777) == -1)
         {
             printf("mkdir(%s) failed(%s)\n",directory.c_str(), strerror(errno));
             return false;

@@ -6,7 +6,7 @@ message(STATUS "Find CUDA libraries: ${CUDA_LIBRARIES}")
 
 #---------------------TensorRT----------------------------
 
-set(TENSORRT_ROOT /home/lisen/TensorRT-7.2.2.3/)
+set(TENSORRT_ROOT /workspace/lisen/deploy/tensorRT/TensorRT-7.2.2.3)
 find_path(TENSORRT_INCLUDE_DIR NvInfer.h
         HINTS ${TENSORRT_ROOT} PATH_SUFFIXES include/)
 message(STATUS "Found TensorRT headers at ${TENSORRT_INCLUDE_DIR}")
@@ -44,8 +44,8 @@ message(STATUS "Find OpenCV include at ${OpenCV_INCLUDE_DIRS}")
 message(STATUS "Find OpenCV libraries: ${OpenCV_LIBRARIES}")
 
 #--------------------glog---------------------------------
-set(glog_INCLUDE_DIR "/workspace/lisen/_bushu/lisen/glog/build")
-set(glog_LIBRARIES "/workspace/lisen/_bushu/lisen/glog/build/libglog.so")
+set(glog_INCLUDE_DIR "/workspace/lisen/tools/glog/build")
+set(glog_LIBRARIES "/workspace/lisen/tools/glog/build/libglog.so")
 
 #---------------加入所有源文件-------------------------------
 file(GLOB_RECURSE SRC_MOPDEL_FILES

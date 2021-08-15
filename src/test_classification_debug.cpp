@@ -11,7 +11,7 @@ int main(int, char**) {
     }
     Debug_utils utils;
     utils.init("mobilenet");
-    cv::Mat img = cv::imread("/workspace/lisen/_bushu/tensorrt-python/data/img2.jpg");
+    cv::Mat img = cv::imread("/workspace/lisen/deploy/ncnn/ncnn_demo/data/dog.jpg");
     if (img.empty())
     {
         LOG(ERROR)<<"img is empty!";
@@ -42,8 +42,8 @@ int main(int, char**) {
     for (size_t i = 0; i < outputinfo.size(); i++)
     {
         image_info info = outputinfo[i];
-        std::cout<<"class index :"<<info.indexs.at(0)<<std::endl;
-        std::cout<<"class score :"<<info.scores.at(0)<<std::endl;
+        LOG(INFO)<<"class index :"<<info.indexs.at(0)<<std::endl;
+        LOG(INFO)<<"class score :"<<info.scores.at(0)<<std::endl;
     }
 
 

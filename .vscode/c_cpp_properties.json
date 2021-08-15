@@ -4,9 +4,9 @@
             "name": "Linux",
             "includePath": [
                 "/usr/local/include/opencv4",
-                "/home/lisen/TensorRT-7.2.2.3/include",
+                "/workspace/lisen/deploy/tensorRT/TensorRT-7.2.2.3",
                 "/usr/local/cuda/include",
-                "/workspace/lisen/_bushu/lisen/glog/build",
+                "/workspace/lisen/tools/glog/build",
                 "${workspaceFolder}/TensorRT",
                 "${workspaceFolder}/utils",
                 "${workspaceFolder}/model/detection",
