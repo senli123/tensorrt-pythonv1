@@ -2,11 +2,11 @@
 #include "common.h"
 #include "Infer_data_def.h"
 #include <opencv2/opencv.hpp>
+#include "my_log.h"
 class TensorRT_Interface
 {
 public:
-    TensorRT_Interface(const TensorRT_data &Tparams);
-    bool build();
+    bool build(const TensorRT_data &Tparams);
     bool processInput(std::vector<cv::Mat> &Batch_rbg_img);
     bool infer();
     template <typename T>

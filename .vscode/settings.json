@@ -80,7 +80,13 @@
         "mobilenetv2_data.h": "c",
         "my_log.h": "c",
         "tools.h": "c",
-        "locale": "cpp"
+        "locale": "cpp",
+        "classification_utils.h": "c",
+        "classification_interface.h": "c",
+        "opencv.hpp": "c",
+        "classification_common.h": "c",
+        "service_interface.h": "c",
+        "class_factory.h": "c"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",
@@ -88,5 +94,10 @@
         "--disable=E1101",
         "--disable=E1121",
         "--disable=W,C",
-        "--disable=bad-option-value"],
+        "--disable=bad-option-value"
+    ],
+    "editor.fontSize": 20,
+    "debug.console.fontSize": 20,
+    "scm.inputFontSize": 20,
+    "terminal.integrated.fontSize": 20,
 }

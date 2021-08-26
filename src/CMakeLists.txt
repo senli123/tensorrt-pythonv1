@@ -44,8 +44,8 @@ message(STATUS "Find OpenCV include at ${OpenCV_INCLUDE_DIRS}")
 message(STATUS "Find OpenCV libraries: ${OpenCV_LIBRARIES}")
 
 #--------------------glog---------------------------------
-set(glog_INCLUDE_DIR "/workspace/lisen/_bushu/lisen/glog/build")
-set(glog_LIBRARIES "/workspace/lisen/_bushu/lisen/glog/build/libglog.so")
+set(glog_INCLUDE_DIR "/workspace/lisen/_bushu/lisen/tools/glog/build")
+set(glog_LIBRARIES "/workspace/lisen/_bushu/lisen/tools/glog/build/libglog.so")
 
 #---------------加入所有源文件-------------------------------
 file(GLOB_RECURSE SRC_MOPDEL_FILES
@@ -76,6 +76,7 @@ target_include_directories(TensorrtEngine
                                 ${glog_INCLUDE_DIR}
                                 ${PROJECT_SOURCE_DIR}/TensorRT #底层接口相关
                                 ${PROJECT_SOURCE_DIR}/utils #utils相关
+                                ${PROJECT_SOURCE_DIR}/model
                                 ${PROJECT_SOURCE_DIR}/model/detection
                                 ${PROJECT_SOURCE_DIR}/model/detection/yolov5
                                 ${PROJECT_SOURCE_DIR}/service/yolov5

@@ -2,32 +2,28 @@
 #include "NvOnnxParser.h"
 #include <fstream>
 #include <unistd.h>
-TensorRT_Interface::TensorRT_Interface(const TensorRT_data &Tparams)
+bool TensorRT_Interface::build(const TensorRT_data &Tparams)
 {
-    this->Tparams = Tparams;
-}
-
-bool TensorRT_Interface::build()
-{
+	this->Tparams = Tparams;
     cudaSetDevice(this->Tparams.CudaID);
 	nvinfer1::IBuilder *builder = nvinfer1::createInferBuilder(global_logger);
 	if (!builder)
 	{
-		printf("Create builder fail !");
+		LOG(ERROR)<<"[TensorRT_Interface::build] Create builder failed!";
 		return false;
 	}
 	const auto explicit_batch = 1U << static_cast<uint32_t>(nvinfer1::NetworkDefinitionCreationFlag::kEXPLICIT_BATCH);
 	nvinfer1::INetworkDefinition* network = builder->createNetworkV2(explicit_batch);
 	if (!network)
 	{
-		printf("Create network fail !");
+		LOG(ERROR)<<"[TensorRT_Interface::build] Create network failed!";
 		builder->destroy();
 		return false;
 	}
 	nvinfer1::IBuilderConfig *config = builder->createBuilderConfig();
 	if (!config)
 	{
-		printf("Create config fail !");
+		LOG(ERROR)<<"[TensorRT_Interface::build] Create config failed!";
 		builder->destroy();
 		network->destroy();
 		return false;
@@ -51,7 +47,7 @@ bool TensorRT_Interface::build()
 		nvonnxparser::IParser* parser = nvonnxparser::createParser(*network, global_logger);
 		if (!parser->parseFromFile(onnxfile.c_str(), static_cast<int>(nvinfer1::ILogger::Severity::kWARNING)))
 		{
-			std::cout << "Parse onnx file fail!" << std::endl;
+			LOG(ERROR)<<"[TensorRT_Interface::build] Parse onnx file failed!";
 			builder->destroy();
 			network->destroy();
 			config->destroy();
@@ -60,7 +56,7 @@ bool TensorRT_Interface::build()
 		engine = builder->buildEngineWithConfig(*network, *config);
 		if (!engine)
 		{
-			std::cout << "Create engine fail!" << std::endl;
+			LOG(ERROR)<<"[TensorRT_Interface::build] Create engine failed!";
 			builder->destroy();
 			network->destroy();
 			config->destroy();
@@ -88,7 +84,7 @@ bool TensorRT_Interface::build()
 		nvinfer1::IRuntime* runtime = nvinfer1::createInferRuntime(global_logger);
 		if (!runtime)
 		{
-			std::cout << "Create runtime fail!" << std::endl;
+			LOG(ERROR)<<"[TensorRT_Interface::build] Create runtime failed!";
 			builder->destroy();
 			network->destroy();
 			config->destroy();
@@ -97,7 +93,7 @@ bool TensorRT_Interface::build()
 		this->engine = runtime->deserializeCudaEngine(model_mem, model_size, nullptr);
 		if (!this->engine)
 		{
-			std::cout << "Create engine fail!" << std::endl;
+			LOG(ERROR)<<"[TensorRT_Interface::build] Create engine failed!";
 			builder->destroy();
 			network->destroy();
 			config->destroy();
@@ -120,7 +116,7 @@ bool TensorRT_Interface::infer()
 	this->context = this->engine->createExecutionContext();
 	if (!this->context)
 	{
-		printf("context fail !");
+		LOG(ERROR)<<"[TensorRT_Interface::infer] context failed!";
 		return false;
 	}
     cudaSetDevice(this->Tparams.CudaID);
@@ -129,7 +125,7 @@ bool TensorRT_Interface::infer()
     bool status = this->context->executeV2(this->buffer.getDeviceBuffer().data());
     if (!status)
     {
-        printf("infer fail !");
+		LOG(ERROR)<<"[TensorRT_Interface::infer] infer failed!";
         return false;
     }
 	clock_t b = clock();

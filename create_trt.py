@@ -32,7 +32,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--net_path", type=str, default="./model_zoo/onnx")
     parser.add_argument("--save_path", type=str, default="./model_zoo/trt")
-    parser.add_argument("--onnx_name", type=str, default="mobilenet_v2.onnx")
+    parser.add_argument("--onnx_name", type=str, default="squeezenet1_0.onnx")
     parser.add_argument('--batch_size', type=int, default=1)
     parser.add_argument('--shape', type=list, default=[1,3, 224,224])
     args = parser.parse_args()
