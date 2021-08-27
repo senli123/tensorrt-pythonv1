@@ -15,6 +15,7 @@ public:
     ~TensorRT_Interface()
     {
         this->engine->destroy();
+     
         
         
     }

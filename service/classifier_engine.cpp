@@ -106,43 +106,78 @@ bool ClassifierEngine::ParseConfig(std::string config_name, classify_config &con
             LOG(ERROR)<<"config path is fault!";
             return false;
         }
+        std::string cla_onnx_path; 
+        std::string cla_bin_path;
+        std::string cla_input_name;
+        std::string cla_output_name;
+        int cla_cuda_id;
         int cla_input_size;
         int cla_batch_size;
-        std::string cla_device;
-        std::string cla_xml_path;
         float cla_meanVals[3];
         float cla_normVals[3];
         int cla_class_num;
         int cla_output_num;
+        bool cla_FP16;
+        bool cla_INT8;
 
+
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_ONNX_PATH))
+        {
+            cla_onnx_path = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_ONNX_PATH);
+        }else{
+            LOG(ERROR)<<"parse onnx path failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BIN_PATH))
+        {
+            cla_bin_path = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BIN_PATH).c_str();
+        }else{
+            LOG(ERROR)<<"parse bin path failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_NAME))
+        {
+            cla_input_name = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_NAME).c_str();
+        }else{
+            LOG(ERROR)<<"parse input name failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_OUTPUT_NAME))
+        {
+            cla_output_name = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_OUTPUT_NAME).c_str();
+        }else{
+            LOG(ERROR)<<"parse output name failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CUDA_ID))
+        {
+            cla_cuda_id = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CUDA_ID).c_str());
+        }else{
+            LOG(ERROR)<<"parse input size failed!";
+            return false;
+        }
         if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE))
         {
             cla_input_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE).c_str());
         }else{
-            LOG(ERROR)<<"parse input_size failed!";
+            LOG(ERROR)<<"parse input size failed!";
             return false;
         }
         if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE))
         {
             cla_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE).c_str());
         }else{
-            LOG(ERROR)<<"parse batch_size failed!";
+            LOG(ERROR)<<"parse input size failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_DEVICE))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE))
         {
-            cla_device = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_DEVICE);
+            cla_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE).c_str());
         }else{
-            LOG(ERROR)<<"parse device failed!";
+            LOG(ERROR)<<"parse batch size failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_XML_PATH))
-        {
-            cla_xml_path = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_XML_PATH);
-        }else{
-            LOG(ERROR)<<"parse xml_path failed!";
-            return false;
-        }
+        
         //解析均值方差
         std::string temp_meanVals;
         if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_MEAMVALS))
@@ -180,7 +215,7 @@ bool ClassifierEngine::ParseConfig(std::string config_name, classify_config &con
         {
             cla_normVals[index] = atof(normVals_list[index].c_str());
         }
-
+        
         if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CLASS_NUM))
         {
             cla_class_num = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CLASS_NUM).c_str());
@@ -195,14 +230,41 @@ bool ClassifierEngine::ParseConfig(std::string config_name, classify_config &con
             LOG(ERROR)<<"parse output_num failed!";
             return false;
         }
-        strcpy(config.xml_path,cla_xml_path.c_str());
-        strcpy(config.device,cla_device.c_str());
+        int temp_fp16,temp_int8;
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_FP16))
+        {
+            temp_fp16 = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_FP16).c_str());
+        }else{
+            LOG(ERROR)<<"parse fp16 failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INT8))
+        {
+            temp_int8 = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INT8).c_str());
+        }else{
+            LOG(ERROR)<<"parse int8 failed!";
+            return false;
+        }
+        if (temp_fp16 ==1 and temp_int8==1)
+        {
+            LOG(ERROR)<<"check the settings of fp16 & int8 !";
+            return false;
+        }
+        cla_FP16 = temp_fp16;
+        cla_INT8=temp_int8;
+        strcpy(config.onnx_path,cla_onnx_path.c_str());
+        strcpy(config.bin_path,cla_bin_path.c_str());
+        strcpy(config.input_name,cla_input_name.c_str());
+        strcpy(config.output_name,cla_output_name.c_str());
+        config.cuda_id = cla_cuda_id;
         config.input_size = cla_input_size;
         config.batch_size = cla_batch_size;
         memcpy(config.meanVals,cla_meanVals,sizeof(cla_meanVals));
         memcpy(config.normVals,cla_normVals,sizeof(cla_normVals));
         config.class_num = cla_class_num;
         config.output_num = cla_output_num;
+        config.FP16 = cla_FP16;
+        config.INT8 = cla_INT8;
     }
     catch(...)
     {

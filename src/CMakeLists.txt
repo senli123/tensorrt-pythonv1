@@ -76,12 +76,14 @@ target_include_directories(TensorrtEngine
                                 ${glog_INCLUDE_DIR}
                                 ${PROJECT_SOURCE_DIR}/TensorRT #底层接口相关
                                 ${PROJECT_SOURCE_DIR}/utils #utils相关
+                                ${PROJECT_SOURCE_DIR}/service
                                 ${PROJECT_SOURCE_DIR}/model
-                                ${PROJECT_SOURCE_DIR}/model/detection
-                                ${PROJECT_SOURCE_DIR}/model/detection/yolov5
-                                ${PROJECT_SOURCE_DIR}/service/yolov5
+                                #${PROJECT_SOURCE_DIR}/model/detection
+                                #${PROJECT_SOURCE_DIR}/model/detection/yolov5
+                                #${PROJECT_SOURCE_DIR}/service/yolov5
                                 ${PROJECT_SOURCE_DIR}/model/classification
-                                ${PROJECT_SOURCE_DIR}/model/classification/mobilenet/mobilenetv2)
+                                #${PROJECT_SOURCE_DIR}/model/classification/mobilenet/mobilenetv2
+                                )
 
 # if(MIRROR_BUILD_CLASSIFIER)
 #         add_executable(demo ${CMAKE_SOURCE_DIR}/src/test_classification_debug.cpp)

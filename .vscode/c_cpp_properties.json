@@ -9,11 +9,12 @@
                 "/workspace/lisen/_bushu/lisen/tools/glog/build",
                 "${workspaceFolder}/TensorRT",
                 "${workspaceFolder}/utils",
-                "${workspaceFolder}/model/detection",
-                "${workspaceFolder}/model/detection/yolov5",
-                "${workspaceFolder}/service/yolov5/",
-                "${workspaceFolder}/model/classification/",
-                "${workspaceFolder}/model/classification/mobilenet/mobilenetv2"
+                "${workspaceFolder}/service",
+                //"${workspaceFolder}/model/detection",
+                //"${workspaceFolder}/model/detection/yolov5",
+                //"${workspaceFolder}/service/yolov5/",
+                "${workspaceFolder}/model/classification/"
+                //"${workspaceFolder}/model/classification/mobilenet/mobilenetv2"
                 
             ],
             "defines": [],

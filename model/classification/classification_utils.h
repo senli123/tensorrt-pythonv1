@@ -1,12 +1,7 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-typedef struct tag_image_info
-{
-	std::vector<int> indexs;
-	std::vector<float> scores;    
-} image_info;
-
+#include "classification_interface.h"
 class ClassificationUtils
 {
 public:

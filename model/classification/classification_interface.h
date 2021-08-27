@@ -15,8 +15,6 @@ typedef struct tag_classify_config
     char input_name[100];
     char output_name[100];
     int cuda_id;
-    int input_dim;
-    int output_dim;
     int input_size;
     int batch_size;
     float meanVals[3];
