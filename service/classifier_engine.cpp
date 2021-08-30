@@ -2,6 +2,7 @@
 REGISTER_CLASS(ClassificationCommon)
 //REGISTER_CLASS(Squeezenet)
 REGISTER_CLA_CONFIG(mobilenetv2_config)
+REGISTER_CLA_CONFIG(alexnet_config)
 //REGISTER_CLA_CONFIG(squeezenet_config)
 std::vector<std::string> split(std::string str, std::string pattern)
 {

@@ -107,7 +107,10 @@ bool TensorRT_Interface::build(const TensorRT_data &Tparams)
 	network->destroy();
 	this->buffer.createBuffer(this->engine, this->Tparams.BatchSize);
 	this->hostDataBuffer = static_cast<float *>(this->buffer.getHostBuffer(this->Tparams.InputTensorNames));
-	this->output = static_cast<float*>(this->buffer.getHostBuffer(this->Tparams.OutputTensorNames));
+	for (int i = 0; i < this->Tparams.OutputTensorNames.size(); i++)
+	{
+		this->outputs.push_back(static_cast<float*>(this->buffer.getHostBuffer(this->Tparams.OutputTensorNames[i])));
+	}
 	return true;
 }
 

@@ -1,13 +1,26 @@
 #include "classification_common.h"
+//--------对输入和输出进行拆分
+std::vector<char*> split_name(char input_names[],const char split[])
+{
+    std::vector<char*> res_split;
+    char* res = strtok(input_names, split);//image_name必须为char[] 
+    while (res != NULL)
+	{
+		res_split.push_back(res);
+		res = strtok(NULL, split);
+	}
+    return res_split;
+}
 bool ClassificationCommon::Model_build(const classify_config &input_config)
 {
+    std::vector<char*> output_names = split_name(config.output_name,",");
     config = input_config;
     TensorRT_data Tparams = {
         config.onnx_path,
         config.bin_path,
         config.cuda_id,
         config.input_name,
-        config.output_name,
+        output_names,
         config.batch_size,
         config.input_size,
         config.input_size,
@@ -108,7 +121,7 @@ bool ClassificationCommon::PostProcess(std::vector<image_info>& outputinfo)
             std::vector<std::pair<float, int>> index_info;
             for (int class_index = 0; class_index < config.class_num; class_index++)
             {
-                index_info.push_back(std::make_pair(output[batch * config.class_num + class_index],class_index));
+                index_info.push_back(std::make_pair(this->outputs[0][batch * config.class_num + class_index],class_index));
             }
             index_infos.push_back(index_info);
         }

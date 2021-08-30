@@ -26,7 +26,7 @@ public:
     nvinfer1::IExecutionContext *context;
     BufferControl buffer;
     float *hostDataBuffer;
-    float *output;
+    std::vector<float*> outputs;
     int img_size = 0;
 
 

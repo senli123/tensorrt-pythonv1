@@ -15,3 +15,20 @@ const classify_config mobilenetv2_config=
     MOBILENETV2_FP16,
     MOBILENETV2_INT8
 };
+
+const classify_config alexnet_config =
+{
+    ALEXNET_ONNXFILENAME,
+	ALEXNET_BINFILENAME,
+    ALEXNET_INPUTTENSORNAMES,
+    ALEXNET_OUTPUTTENSORNAMES,
+    ALEXNET_CUDAID,
+    ALEXNET_RESIZE,
+    ALEXNET_BATCHSIZE,
+    ALEXNET_meanVals,
+    ALEXNET_normVals,
+    ALEXNET_CLASS_NUM,
+    ALEXNET_TOPNUMS,
+    ALEXNET_FP16,
+    ALEXNET_INT8
+};
