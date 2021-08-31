@@ -86,7 +86,16 @@
         "opencv.hpp": "c",
         "classification_common.h": "c",
         "service_interface.h": "c",
-        "class_factory.h": "c"
+        "class_factory.h": "c",
+        "common.h": "c",
+        "alglogger.h": "c",
+        "logging.h": "c",
+        "string.h": "c",
+        "detection_interface.h": "c",
+        "classification_config.h": "c",
+        "config_operator.h": "c",
+        "types.h": "c",
+        "register.h": "c"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",

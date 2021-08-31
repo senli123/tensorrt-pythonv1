@@ -12,3 +12,10 @@ RegisterClassifyConfig::RegisterClassifyConfig(string classify_config_name, clas
   Store::getInstance()->RegisterClassifyConfig(classify_config_name, config);
 }
 RegisterClassifyConfig::~RegisterClassifyConfig(){}
+
+
+RegisterDetectionConfig::RegisterDetectionConfig(string detection_config_name, detection_config config)
+{
+  Store::getInstance()->RegisterDetectionConfig(detection_config_name, config);
+}
+RegisterDetectionConfig::	~RegisterDetectionConfig(){}

@@ -62,3 +62,30 @@ void Store::GetClassifyConfigKeys()
     std::cout<<std::endl;
 
 }
+
+detection_config Store::FindDetectionConfig(const string& config_name)
+{
+    map <string,detection_config>::iterator it = m_register_detection.find(config_name);
+    if (it == m_register_detection.end())
+    {
+        detection_config temp_config;
+        temp_config.input_size = 0;
+        return temp_config;
+    }	
+    else {
+        return it->second;
+    }
+}
+void Store::RegisterDetectionConfig(const string& config_name, detection_config config)
+{
+    m_register_detection[config_name] = config;
+}
+void Store::GetDetectionConfigKeys()
+{
+    for (map<string, detection_config>::iterator it = m_register_detection.begin(); it != m_register_detection.end(); ++it)
+    {
+        std::cout<<it->first<<", ";
+    }
+    std::cout<<std::endl;
+
+}

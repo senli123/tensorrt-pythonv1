@@ -1,20 +1,35 @@
 #pragma once
+#include <opencv2/opencv.hpp>
+#include "dete_utils.h"
 #include <algorithm>
-#include <vector>
-typedef struct tag_InstanceInfo 
-{
-	float x1;           
-	float y1;
-	float x2;
-	float y2;
-	float score;            
-	int class_id;   
-} InstanceInfo;
+#include "detection_interface.h"
+// class DetectionUtils
+// {
+// public:
+//     bool NMS(std::vector<InstanceInfo> predictions, float iou_thre,std::vector<InstanceInfo>& outputinfo);
+//     bool ScaleCoords(int net_require_width, int net_require_height, int src_img_width, int src_img_height, InstanceInfo& prediction);
+
+// };
 
 class DetectionUtils
 {
 public:
-    bool NMS(std::vector<InstanceInfo> predictions, float iou_thre,std::vector<InstanceInfo>& outputinfo);
-    bool ScaleCoords(int net_require_width, int net_require_height, int src_img_width, int src_img_height, InstanceInfo& prediction);
+    ~DetectionUtils(){}
+    DetectionUtils(const DetectionUtils&)=delete;
+    DetectionUtils& operator=(const DetectionUtils&)=delete;
+    static DetectionUtils& get_instance(){
+        static DetectionUtils instance;
+        return instance;
+
+    }
+private:
+    DetectionUtils(){};
+	bool Update_coords(int img_width, int img_height, int resize_w, int resize_h, cv::Rect &rect);
+public:
+	double sigmoid(double x);
+	bool NMS(std::vector<std::vector<InstanceInfo>> &output_infos,std::vector<std::map<int,ClassInfo>> &classinfo, 
+	std::vector<int> &height_list,std::vector<int> &width_list,float &cof_threshold, float &nmsThreshold,
+	int &inputW, int &inputH);
+
 
 };

@@ -12,6 +12,7 @@ const std::string CFG_ITEM_BREAK = "=";
 
 
 const std::string CFG_CLASSIFICATION = "classification";
+const std::string CFG_DETECTION = "detection";
 
 const std::string CFG_ONNX_PATH = "_onnx_path";
 const std::string CFG_BIN_PATH = "_bin_path";
@@ -28,6 +29,12 @@ const std::string CFG_CLASS_NUM = "_class_num";
 const std::string CFG_TOP_NUM = "_top_num";
 const std::string CFG_FP16 = "_fp16";
 const std::string CFG_INT8 = "_int8";
+
+const std::string CFG_ITEM_NUM = "_item_num";
+const std::string CFG_CONFTHRE = "_confthre";
+const std::string CFG_IOUTHRE = "_iouthre";
+const std::string CFG_IOUTHRE = "_net_grid";
+const std::string CFG_IOUTHRE = "_anchor_num";
 
 typedef std::map<std::string,std::string> CFG_ITEMS;
 typedef std::string CFG_SECTION;

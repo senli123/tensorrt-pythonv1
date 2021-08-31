@@ -1,16 +1,13 @@
-#include "classifier_engine.h"
-#include "utils.h"
-REGISTER_CLASS(ClassificationCommon)
-//REGISTER_CLASS(Squeezenet)
-REGISTER_CLA_CONFIG(mobilenetv2_config)
-REGISTER_CLA_CONFIG(alexnet_config)
-//REGISTER_CLA_CONFIG(squeezenet_config)
+#include "detection_engine.h"
 
-bool ClassifierEngine::init(std::string model_name,std::string config_name)
+REGISTER_CLASS(Yolov5)
+REGISTER_DETE_CONFIG(yolov5_config)
+
+bool DetectionEngine::init(std::string model_name,std::string config_name)
 {   //model初始化
     bool err;
     std::cout<<config_name<<std::endl;
-    model= ClassifierFactory::createClassifierInterface(model_name);
+    model= DetectionFactory::createDetectionInterface(model_name);
     if (model == nullptr)
     {
         std::cout << "input model_name not in :" << std::endl;
@@ -23,20 +20,20 @@ bool ClassifierEngine::init(std::string model_name,std::string config_name)
         return false;
     }
 #ifdef RELEASE
-    classify_config config;
+    detection_config config;
     err =  ParseConfig(config_name, config);
     if (!err)
     {
-        LOG(ERROR)<<"[ClassifierEngine::init]ParseConfig process failed!";
+        LOG(ERROR)<<"[DetectionEngine::init]ParseConfig process failed!";
         return false;
     }
     err = model->Model_build(config);
 #else
-    classify_config config= ClassifyConfigFactory::createStruct(config_name);
+    detection_config config= DetectionConfigFactory::createStruct(config_name);
     if (config.input_size == 0)
     {
         std::cout << "input config_name not in :" << std::endl;
-        Store::getInstance()->GetClassifyConfigKeys();
+        Store::getInstance()->GetDetectionConfigKeys();
         return false;
     }
     err = model->Model_build(config);
@@ -44,30 +41,37 @@ bool ClassifierEngine::init(std::string model_name,std::string config_name)
 #endif
     if (!err)
     {
-        LOG(ERROR)<<"build failed!";
+        LOG(ERROR)<<"[DetectionEngine::init] build failed!";
         return false;
     }
-     return true;   
+    return true;   
 }
-bool ClassifierEngine::run(std::vector<cv::Mat> &imgs)
+bool DetectionEngine::run(std::vector<cv::Mat> &imgs)
 {
+    
     bool err;
-    std::vector<image_info> outputinfos;
+    std::vector<std::vector<InstanceInfo>> output_infos;
     Debug_utils::set_time(START);
-    err = model->Model_infer(imgs,outputinfos);
+    err = model->Model_infer(imgs,output_infos);
     if (!err)
     {
-       LOG(ERROR)<<"Infer failed!";
+        LOG(ERROR)<<"[DetectionEngine::run]Infer failed!";
         return false;
     }
     Debug_utils::set_time(END);
-    for (size_t i = 0; i < outputinfos.size(); i++)
+    for (size_t i = 0; i < output_infos.size(); i++)
     {
-        image_info outputinfo = outputinfos[i];
-        LOG(INFO)<<"class index :"<<outputinfo.indexs.at(0);
-        LOG(INFO)<<"class score :"<<outputinfo.scores.at(0);
+        std::vector<InstanceInfo> outputinfo = output_infos[i];
+        for(size_t j = 0; j < outputinfo.size(); j++)
+        {
+            InstanceInfo instance = outputinfo[j];
+            LOG(INFO)<<"instance id :"<<instance.class_id;
+            LOG(INFO)<<"instance score :"<<instance.score;
+            LOG(INFO)<<"instance bbox :"<<instance.rect.x <<" "<<instance.rect.y<<" "<<instance.rect.width<<" "<<instance.rect.height;
+        }
+        std::string path = "./" + std::to_string(i) + ".bmp";
+        Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
     }
-    
     #ifdef RELEASE
     #else
         utils.save_time_path();
@@ -75,12 +79,12 @@ bool ClassifierEngine::run(std::vector<cv::Mat> &imgs)
     #endif
     return true;
 }
-bool ClassifierEngine::uninit()
+bool DetectionEngine::uninit()
 {
     delete model;
     return true;
 }
-bool ClassifierEngine::ParseConfig(std::string config_name, classify_config &config)
+bool DetectionEngine::ParseConfig(std::string config_name, detection_config &config)
 {
     try
     {

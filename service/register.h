@@ -42,3 +42,11 @@ public:
 	~RegisterClassifyConfig();
 };
 
+class RegisterDetectionConfig
+{
+public:
+	RegisterDetectionConfig(string classify_config_name, detection_config config);
+	~RegisterDetectionConfig();
+};
+
+
