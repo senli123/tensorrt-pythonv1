@@ -12,7 +12,7 @@ public:
     bool Model_infer(std::vector<cv::Mat> &bgr_imgs,std::vector<std::vector<InstanceInfo>> &output_infos);
 private:
     bool PreProcess(cv::Mat &bgr_img, std::vector<cv::Mat> &rgb_channel_img);
-    bool PostProcess(std::vector<std::vector<InstanceInfo>> &defect_info, std::vector<int> height_list, std::vector<int> width_list);
+    bool PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos, std::vector<int> height_list, std::vector<int> width_list);
 
     bool get_anchors(int net_grid,std::vector<int> &anchors);
 private:

@@ -69,7 +69,7 @@ bool DetectionEngine::run(std::vector<cv::Mat> &imgs)
             LOG(INFO)<<"instance score :"<<instance.score;
             LOG(INFO)<<"instance bbox :"<<instance.rect.x <<" "<<instance.rect.y<<" "<<instance.rect.width<<" "<<instance.rect.height;
         }
-        std::string path = "./" + std::to_string(i) + ".bmp";
+        std::string path = "./1" + std::to_string(i) + ".bmp";
         Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
     }
     #ifdef RELEASE
@@ -94,73 +94,69 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
             LOG(ERROR)<<"config path is fault!";
             return false;
         }
-        std::string cla_onnx_path; 
-        std::string cla_bin_path;
-        std::string cla_input_name;
-        std::string cla_output_name;
-        int cla_cuda_id;
-        int cla_input_size;
-        int cla_batch_size;
-        float cla_meanVals[3];
-        float cla_normVals[3];
-        int cla_class_num;
-        int cla_output_num;
-        bool cla_FP16;
-        bool cla_INT8;
+        std::string dete_onnx_path; 
+        std::string dete_bin_path;
+        std::string dete_input_name;
+        std::string dete_output_name;
+        int dete_cuda_id;
+        int dete_input_size;
+        int dete_batch_size;
+        float dete_meanVals[3];
+        float dete_normVals[3];
+        int dete_item_num;
+        float dete_confthre;
+        float dete_iouthre;
+        int dete_net_grid[3];
+        int dete_anchor_num;
+        bool dete_FP16;
+        bool dete_INT8;
 
 
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_ONNX_PATH))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ONNX_PATH))
         {
-            cla_onnx_path = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_ONNX_PATH);
+            dete_onnx_path = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ONNX_PATH);
         }else{
             LOG(ERROR)<<"parse onnx path failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BIN_PATH))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_BIN_PATH))
         {
-            cla_bin_path = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BIN_PATH).c_str();
+            dete_bin_path = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_BIN_PATH).c_str();
         }else{
             LOG(ERROR)<<"parse bin path failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_NAME))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_NAME))
         {
-            cla_input_name = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_NAME).c_str();
+            dete_input_name = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_NAME).c_str();
         }else{
             LOG(ERROR)<<"parse input name failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_OUTPUT_NAME))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_OUTPUT_NAME))
         {
-            cla_output_name = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_OUTPUT_NAME).c_str();
+            dete_output_name = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_OUTPUT_NAME).c_str();
         }else{
             LOG(ERROR)<<"parse output name failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CUDA_ID))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_CUDA_ID))
         {
-            cla_cuda_id = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CUDA_ID).c_str());
+            dete_cuda_id = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_CUDA_ID).c_str());
+        }else{
+            LOG(ERROR)<<"parse cuda id failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_SIZE))
+        {
+            dete_input_size = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_SIZE).c_str());
         }else{
             LOG(ERROR)<<"parse input size failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_BATCH_SIZE))
         {
-            cla_input_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE).c_str());
-        }else{
-            LOG(ERROR)<<"parse input size failed!";
-            return false;
-        }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE))
-        {
-            cla_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE).c_str());
-        }else{
-            LOG(ERROR)<<"parse input size failed!";
-            return false;
-        }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE))
-        {
-            cla_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE).c_str());
+            dete_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_BATCH_SIZE).c_str());
         }else{
             LOG(ERROR)<<"parse batch size failed!";
             return false;
@@ -168,9 +164,9 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
         
         //解析均值方差
         std::string temp_meanVals;
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_MEAMVALS))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_MEAMVALS))
         {
-            temp_meanVals = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_MEAMVALS);
+            temp_meanVals = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_MEAMVALS);
         }else{
             LOG(ERROR)<<"parse meanVals failed!";
             return false;
@@ -183,12 +179,12 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
         }
         for (int index = 0; index < 3; index++)
         {
-            cla_meanVals[index] = atof(meanVals_list[index].c_str());
+            dete_meanVals[index] = atof(meanVals_list[index].c_str());
         }
         std::string temp_normVals;
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_NORMVALS))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_NORMVALS))
         {
-            temp_normVals = ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_NORMVALS);
+            temp_normVals = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_NORMVALS);
         }else{
             LOG(ERROR)<<"parse normVals failed!";
             return false;
@@ -201,34 +197,62 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
         }
         for (int index = 0; index < 3; index++)
         {
-            cla_normVals[index] = atof(normVals_list[index].c_str());
+            dete_normVals[index] = atof(normVals_list[index].c_str());
         }
-        
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CLASS_NUM))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ITEM_NUM))
         {
-            cla_class_num = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CLASS_NUM).c_str());
+            dete_item_num = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ITEM_NUM).c_str());
         }else{
-            LOG(ERROR)<<"parse class_num failed!";
+            LOG(ERROR)<<"parse item_num failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_TOP_NUM))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_CONFTHRE))
         {
-            cla_output_num = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_TOP_NUM).c_str());
+            dete_confthre = atof(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_CONFTHRE).c_str());
         }else{
-            LOG(ERROR)<<"parse output_num failed!";
+            LOG(ERROR)<<"parse confthre failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_IOUTHRE))
+        {
+            dete_iouthre = atof(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_IOUTHRE).c_str());
+        }else{
+            LOG(ERROR)<<"parse iouthre failed!";
+            return false;
+        }
+        //解析net_grid
+        std::string temp_net_grid;
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_NET_GRID))
+        {
+            temp_net_grid = ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_NET_GRID);
+        }else{
+            LOG(ERROR)<<"parse net_grid failed!";
+            return false;
+        }
+        std::vector<std::string> net_grid_list=Utils::get_instance().split(temp_net_grid,",");
+        for (int index = 0; index < net_grid_list.size(); index++)
+        {
+            dete_net_grid[index] = atoi(net_grid_list[index].c_str());
+        }
+
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ANCHOR_NUM))
+        {
+            dete_anchor_num = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_ANCHOR_NUM).c_str());
+        }else{
+            LOG(ERROR)<<"parse anchor_num failed!";
             return false;
         }
         int temp_fp16,temp_int8;
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_FP16))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_FP16))
         {
-            temp_fp16 = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_FP16).c_str());
+            temp_fp16 = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_FP16).c_str());
         }else{
             LOG(ERROR)<<"parse fp16 failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INT8))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INT8))
         {
-            temp_int8 = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INT8).c_str());
+            temp_int8 = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INT8).c_str());
         }else{
             LOG(ERROR)<<"parse int8 failed!";
             return false;
@@ -238,21 +262,25 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
             LOG(ERROR)<<"check the settings of fp16 & int8 !";
             return false;
         }
-        cla_FP16 = temp_fp16;
-        cla_INT8=temp_int8;
-        strcpy(config.onnx_path,cla_onnx_path.c_str());
-        strcpy(config.bin_path,cla_bin_path.c_str());
-        strcpy(config.input_name,cla_input_name.c_str());
-        strcpy(config.output_name,cla_output_name.c_str());
-        config.cuda_id = cla_cuda_id;
-        config.input_size = cla_input_size;
-        config.batch_size = cla_batch_size;
-        memcpy(config.meanVals,cla_meanVals,sizeof(cla_meanVals));
-        memcpy(config.normVals,cla_normVals,sizeof(cla_normVals));
-        config.class_num = cla_class_num;
-        config.output_num = cla_output_num;
-        config.FP16 = cla_FP16;
-        config.INT8 = cla_INT8;
+        dete_FP16 = temp_fp16;
+        dete_INT8=temp_int8;
+
+        strcpy(config.onnx_path,dete_onnx_path.c_str());
+        strcpy(config.bin_path,dete_bin_path.c_str());
+        strcpy(config.input_name,dete_input_name.c_str());
+        strcpy(config.output_name,dete_output_name.c_str());
+        config.cuda_id = dete_cuda_id;
+        config.input_size = dete_input_size;
+        config.batch_size = dete_batch_size;
+        memcpy(config.meanVals, dete_meanVals, sizeof(dete_meanVals));
+        memcpy(config.normVals, dete_normVals, sizeof(dete_normVals));
+        config.item_num = dete_item_num;
+        config.confthre = dete_confthre;
+        config.iouthre = dete_iouthre;
+        memcpy(config.net_grid, dete_net_grid, sizeof(dete_net_grid));
+        config.anchor_num = dete_anchor_num;
+        config.FP16 = dete_FP16;
+        config.INT8 = dete_INT8;
     }
     catch(...)
     {

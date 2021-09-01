@@ -31,6 +31,7 @@ public:
 		return (classify_config)Store::getInstance()->FindClassifyConfig(name);
 	}
 };
+
 class DetectionConfigFactory
 {
 public:

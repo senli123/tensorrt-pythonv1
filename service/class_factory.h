@@ -19,7 +19,7 @@ public:
     void GetClassifyConfigKeys();
     //检测
     detection_config FindDetectionConfig(const string& config_name);
-    void RegisterDetectionConfig(const string& config_name, classify_config config);
+    void RegisterDetectionConfig(const string& config_name, detection_config config);
     void GetDetectionConfigKeys();
 
     

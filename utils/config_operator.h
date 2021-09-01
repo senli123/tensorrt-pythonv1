@@ -33,8 +33,8 @@ const std::string CFG_INT8 = "_int8";
 const std::string CFG_ITEM_NUM = "_item_num";
 const std::string CFG_CONFTHRE = "_confthre";
 const std::string CFG_IOUTHRE = "_iouthre";
-const std::string CFG_IOUTHRE = "_net_grid";
-const std::string CFG_IOUTHRE = "_anchor_num";
+const std::string CFG_NET_GRID = "_net_grid";
+const std::string CFG_ANCHOR_NUM = "_anchor_num";
 
 typedef std::map<std::string,std::string> CFG_ITEMS;
 typedef std::string CFG_SECTION;

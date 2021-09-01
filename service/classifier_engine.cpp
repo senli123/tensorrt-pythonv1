@@ -137,19 +137,12 @@ bool ClassifierEngine::ParseConfig(std::string config_name, classify_config &con
         {
             cla_cuda_id = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_CUDA_ID).c_str());
         }else{
-            LOG(ERROR)<<"parse input size failed!";
+            LOG(ERROR)<<"parse cuda id failed!";
             return false;
         }
         if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE))
         {
             cla_input_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_INPUT_SIZE).c_str());
-        }else{
-            LOG(ERROR)<<"parse input size failed!";
-            return false;
-        }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE))
-        {
-            cla_batch_size = atoi(ConfigOperator::getIns().getValue(CFG_CLASSIFICATION, config_name+CFG_BATCH_SIZE).c_str());
         }else{
             LOG(ERROR)<<"parse input size failed!";
             return false;

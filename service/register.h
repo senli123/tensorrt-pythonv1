@@ -26,7 +26,18 @@ const Register class_name##Register::reg(#class_name, class_name##Register::newI
     }; \
 const RegisterClassifyConfig classify_config_name##Register::reg(#classify_config_name, classify_config_name##Register::newInstance());
 
-
+#define REGISTER_DETE_CONFIG(detection_config_name) \
+    class detection_config_name##Register \
+    { \
+    public: \
+        static detection_config newInstance() \
+        { \
+            return detection_config_name; \
+        } \
+    private: \
+        static const RegisterDetectionConfig reg; \
+    }; \
+const RegisterDetectionConfig detection_config_name##Register::reg(#detection_config_name, detection_config_name##Register::newInstance());
 
 class Register
 {
@@ -45,7 +56,7 @@ public:
 class RegisterDetectionConfig
 {
 public:
-	RegisterDetectionConfig(string classify_config_name, detection_config config);
+	RegisterDetectionConfig(string detection_config_name, detection_config config);
 	~RegisterDetectionConfig();
 };
 

@@ -1,4 +1,5 @@
 #include "yolov5_infer.h"
+const std::vector<int> grid = {80,40,20};
  //模型构建
 bool Yolov5::Model_build(const detection_config &input_config)
 {
@@ -194,12 +195,10 @@ bool Yolov5::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos, s
     }
     return true;
 
-    
-
 }
 bool Yolov5::get_anchors(int net_grid,std::vector<int> &anchors)
 {
-    if (net_grid !=80 || net_grid !=40 || net_grid !=20)
+    if (count(grid.begin(),grid.end(),net_grid)==0)
     {
         LOG(ERROR)<<"[Yolov5::get_anchors] net_grid must be 80,40 or 20!";
         return false;

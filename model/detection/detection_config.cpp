@@ -17,4 +17,4 @@ const detection_config yolov5_config =
     YOLOV5_ANCHOR_NUM, 
     YOLOV5_FP16, 
     YOLOV5_INT8, 
-}
+};

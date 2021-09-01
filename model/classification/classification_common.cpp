@@ -72,8 +72,6 @@ bool ClassificationCommon::Model_infer(std::vector<cv::Mat> &bgr_imgs, std::vect
     LOG(INFO)<<"[ClassificationCommon::Model_infer] Postprocess succeed!";
     Debug_utils::set_time(POSTPROCESS);
     return true;
-    
-    
 }
     //图像预处理
 bool ClassificationCommon::PreProcess(cv::Mat &bgr_img, std::vector<cv::Mat> &rgb_channel_img)

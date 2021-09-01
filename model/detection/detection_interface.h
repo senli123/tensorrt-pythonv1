@@ -29,7 +29,7 @@ typedef struct tag_detection_config
     int item_num;
     float confthre;
     float iouthre;
-    std::vector<int> net_grid;
+    int net_grid[3];
     int anchor_num;
     bool FP16;
     bool INT8;

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             //	去bin文件夹找可执行文件
-            "program": "${workspaceFolder}/bin/demo",
+            "program": "${workspaceFolder}/bin/detection",
             //	每次执行命令行参数在argc中输入
             "args": [],
             "stopAtEntry": false,

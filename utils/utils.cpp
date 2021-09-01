@@ -35,15 +35,15 @@ void Utils::printBbox(cv::Mat img, std::vector<InstanceInfo> instances, std::str
     for(int idx = 0; idx<instances.size();idx++)
     {
         InstanceInfo instance= instances[idx];
-        cv::rectangle(img, instance.rect, cv::Scalar(255, 0, 0), 1, cv::LINE_8, 0);
+        cv::rectangle(img, instance.rect, cv::Scalar(255, 0, 0), 2, cv::LINE_8, 0);
         //类别坐标和socre坐标
 		cv::Point class_point, score_point;
         class_point.x = instance.rect.x - 10;
 		class_point.y = instance.rect.y - 20;
 		score_point.x = instance.rect.x - 10;
 		score_point.y = instance.rect.y - 10;
-        cv::putText(img, std::to_string(instance.class_id), class_point, cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(0, 255, 0), 0.6, 8, 0);
-		cv::putText(img, std::to_string(instance.score), score_point, cv::FONT_HERSHEY_COMPLEX, 0.5,cv::Scalar(0, 0, 255), 0.6, 8, 0);
+        cv::putText(img, std::to_string(instance.class_id), class_point, cv::FONT_HERSHEY_COMPLEX, 0.5, cv::Scalar(0, 255, 0), 1, 8, 0);
+		cv::putText(img, std::to_string(instance.score), score_point, cv::FONT_HERSHEY_COMPLEX, 0.5,cv::Scalar(0, 0, 255), 1, 8, 0);
     }
     cv::imwrite(path,img);
 }
