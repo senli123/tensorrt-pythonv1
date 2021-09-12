@@ -12,7 +12,7 @@ int main(int, char**) {
         return -1;
     }
     std::string model_name = "ClassificationCommon";
-    std::string config_name = "alexnet_config";
+    std::string config_name = "mobilenetv2_config";
     ClassifierEngine engine;
     bool err;
     err = engine.init(model_name,config_name);

@@ -1,10 +1,9 @@
 #pragma once
 #include "class_factory.h"
-#include "classification_interface.h"
-#include "detection_interface.h"
 using namespace std;
 
 //-----------------------模型--------------------------------------
+//分类
 class ClassifierFactory
 {
 public:
@@ -13,7 +12,7 @@ public:
     return (ClassifierInterface*)Store::getInstance()->findInstance(name);
   }
 };
-
+//检测
 class DetectionFactory
 {
 public:
@@ -22,7 +21,17 @@ public:
     return (DetectionInterface*)Store::getInstance()->findInstance(name);
   }
 };
+//分割
+class SegmentationFactory
+{
+public:
+  static SegmentationInterface* createSegmentationInterface(const string& name)
+  {
+    return (SegmentationInterface*)Store::getInstance()->findInstance(name);
+  }
+};
 //--------------------配置---------------------------------
+//分类
 class ClassifyConfigFactory
 {
 public:
@@ -31,12 +40,21 @@ public:
 		return (classify_config)Store::getInstance()->FindClassifyConfig(name);
 	}
 };
-
+//检测
 class DetectionConfigFactory
 {
 public:
 	static detection_config createStruct(const string& name)
 	{
 		return (detection_config)Store::getInstance()->FindDetectionConfig(name);
+	}
+};
+//分割
+class SegmentationConfigFactory
+{
+public:
+	static segmentation_config createStruct(const string& name)
+	{
+		return (segmentation_config)Store::getInstance()->FindSegmentationConfig(name);
 	}
 };

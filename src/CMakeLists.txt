@@ -79,8 +79,7 @@ target_include_directories(TensorrtEngine
                                 ${PROJECT_SOURCE_DIR}/service
                                 ${PROJECT_SOURCE_DIR}/model
                                 ${PROJECT_SOURCE_DIR}/model/detection
-                                ${PROJECT_SOURCE_DIR}/model/detection/yolov5
-                                #${PROJECT_SOURCE_DIR}/service/yolov5
+                                ${PROJECT_SOURCE_DIR}/model/segmentation
                                 ${PROJECT_SOURCE_DIR}/model/classification
                                 #${PROJECT_SOURCE_DIR}/model/classification/mobilenet/mobilenetv2
                                 )

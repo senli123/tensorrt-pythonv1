@@ -89,3 +89,28 @@ void Store::GetDetectionConfigKeys()
     std::cout<<std::endl;
 
 }
+segmentation_config Store::FindSegmentationConfig(const string& config_name)
+{
+   map <string,segmentation_config>::iterator it = m_register_segmentation.find(config_name);
+    if (it == m_register_segmentation.end())
+    {
+        segmentation_config temp_config;
+        temp_config.input_size = 0;
+        return temp_config;
+    }	
+    else {
+        return it->second;
+    }
+}
+void Store::RegisterSegmentationConfig(const string& config_name, segmentation_config config)
+{
+  m_register_segmentation[config_name] = config;
+}
+void Store::GetSegmentationConfigKeys()
+{
+  for (map<string, segmentation_config>::iterator it = m_register_segmentation.begin(); it != m_register_segmentation.end(); ++it)
+    {
+        std::cout<<it->first<<", ";
+    }
+    std::cout<<std::endl;
+}

@@ -19,3 +19,9 @@ RegisterDetectionConfig::RegisterDetectionConfig(string detection_config_name, d
   Store::getInstance()->RegisterDetectionConfig(detection_config_name, config);
 }
 RegisterDetectionConfig::	~RegisterDetectionConfig(){}
+
+RegisterSegmentationConfig::RegisterSegmentationConfig(string segmentation_config_name, segmentation_config config)
+{
+  Store::getInstance()->RegisterSegmentationConfig(segmentation_config_name, config);
+}
+RegisterSegmentationConfig::~RegisterSegmentationConfig(){}

@@ -3,14 +3,16 @@ import torch
 import argparse
 import os
 import numpy as np
+from unet_model import UNet
 
 def generate_weights(opt):
     if not opt.weights:
         print("Please provide weights file")
         return 
     #Load model
-    model = torch.load(opt.weights)
-    model = model.cuda()
+    model = UNet(n_channels=3, n_classes=2)
+    model = model.to('cuda:0')
+    model.load_state_dict(torch.load(opt.weights, map_location='cuda:0'))
     model = model.eval()
 
     f = open(opt.save_trt_weights,"w")

@@ -95,7 +95,10 @@
         "classification_config.h": "c",
         "config_operator.h": "c",
         "types.h": "c",
-        "register.h": "c"
+        "register.h": "c",
+        "stdio.h": "c",
+        "segmentation_config.h": "c",
+        "segmentation_interface.h": "c"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",

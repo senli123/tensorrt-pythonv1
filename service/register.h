@@ -39,6 +39,19 @@ const RegisterClassifyConfig classify_config_name##Register::reg(#classify_confi
     }; \
 const RegisterDetectionConfig detection_config_name##Register::reg(#detection_config_name, detection_config_name##Register::newInstance());
 
+#define REGISTER_SEG_CONFIG(segmentation_config_name) \
+    class segmentation_config_name##Register \
+    { \
+    public: \
+        static segmentation_config newInstance() \
+        { \
+            return segmentation_config_name; \
+        } \
+    private: \
+        static const RegisterSegmentationConfig reg; \
+    }; \
+const RegisterSegmentationConfig segmentation_config_name##Register::reg(#segmentation_config_name, segmentation_config_name##Register::newInstance());
+
 class Register
 {
 public:
@@ -58,6 +71,12 @@ class RegisterDetectionConfig
 public:
 	RegisterDetectionConfig(string detection_config_name, detection_config config);
 	~RegisterDetectionConfig();
+};
+class RegisterSegmentationConfig
+{
+public:
+	RegisterSegmentationConfig(string segmentation_config_name, segmentation_config config);
+	~RegisterSegmentationConfig();
 };
 
 

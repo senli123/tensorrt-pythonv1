@@ -123,19 +123,26 @@ bool TensorRT_Interface::infer()
 		return false;
 	}
     cudaSetDevice(this->Tparams.CudaID);
-    this->buffer.copyBuffers(true, false);
 	clock_t a = clock();
+    this->buffer.copyBuffers(true, false);
+	clock_t b = clock();
+	double cpu2gpu=(double)(b-a)/CLOCKS_PER_SEC;
+	std::cout<<"cpu2gpu time:"<<cpu2gpu*1000<<"ms"<<std::endl;	//ms为单位
     bool status = this->context->executeV2(this->buffer.getDeviceBuffer().data());
     if (!status)
     {
 		LOG(ERROR)<<"[TensorRT_Interface::infer] infer failed!";
         return false;
     }
-	clock_t b = clock();
-	double endtime=(double)(b-a)/CLOCKS_PER_SEC;
-	std::cout<<"Total time:"<<endtime<<std::endl;		//s为单位
-	std::cout<<"Total time:"<<endtime*1000<<"ms"<<std::endl;	//ms为单位
+	clock_t c = clock();
+	double infertime=(double)(c-b)/CLOCKS_PER_SEC;
+	//std::cout<<"Total time:"<<endtime<<std::endl;		//s为单位
+	std::cout<<"infertime time:"<<infertime*1000<<"ms"<<std::endl;	//ms为单位
     this->buffer.copyBuffers(false, true);
+	clock_t d = clock();
+	double gpu2cpu=(double)(d-c)/CLOCKS_PER_SEC;
+	//std::cout<<"Total time:"<<endtime<<std::endl;		//s为单位
+	std::cout<<"gpu2cpu time:"<<gpu2cpu*1000<<"ms"<<std::endl;	//ms为单位
 	this->context->destroy();
     return true;
 }
