@@ -4,10 +4,9 @@ sys.path.append(os.getcwd())
 import numpy as np
 import tensorrt as trt
 from utils.get_trtwts import load_weights
-from TensorRT.layer_common import *
-from cailb import *
+#from cailb import *
 import argparse
-
+from TensorRT.layer_common import *
 EPS = 1e-5
 TRT_LOGGER = trt.Logger(trt.Logger.INFO)
 def doubleConv(network, weight_map, input, outch, ksize, layer_name, midch):
@@ -20,13 +19,13 @@ def doubleConv(network, weight_map, input, outch, ksize, layer_name, midch):
     conv1.stride = (1, 1)
     conv1.padding = (1, 1)
 
-    bn1 = add_batch_norm_2d(network, weight_map, conv1.get_output(0), lname + ".double_conv.1", 0)
+    bn1 = add_batch_norm_2d(network, weight_map, conv1.get_output(0), layer_name + ".double_conv.1", 0)
     assert bn1
 
     relu1 = network.add_activation(bn1.get_output(0), type = trt.ActivationType.kLEAKY_RELU)
     assert relu1
     
-    conv1 = network.add_convolution(input = relu1.getOutput(0),
+    conv2 = network.add_convolution(input = relu1.getOutput(0),
                                     num_output_maps = outch,
                                     kernel_shape = (3, 3),
                                     kernel = weight_map[layer_name + ".double_conv.3.weight"],
@@ -36,7 +35,7 @@ def doubleConv(network, weight_map, input, outch, ksize, layer_name, midch):
     conv2.stride = (1, 1)
     conv2.padding = (1, 1)
 
-    bn2 = add_batch_norm_2d(network, weight_map, conv2.get_output(0), lname + ".double_conv.4", 0)
+    bn2 = add_batch_norm_2d(network, weight_map, conv2.get_output(0), layer_name + ".double_conv.4", 0)
     assert bn2
     
     relu2 = network.add_activation(bn2.get_output(0), type = trt.ActivationType.kLEAKY_RELU)
@@ -45,12 +44,11 @@ def doubleConv(network, weight_map, input, outch, ksize, layer_name, midch):
     return relu2
 
 def down(network, weight_map, input, outch, layer_name):
-    pool1 = network.add_pooling(input = input, type = trt.PoolingType.MAX ,window_size=(trt.DimsHW(2, 2))
+    pool1 = network.add_pooling(input = input, type = trt.PoolingType.MAX ,window_size=trt.DimsHW(2, 2))
     assert pool1
     dcov1 = doubleConv(network, weight_map, pool1.getOutput(0), outch, 3, layer_name +".maxpool_conv.1", outch)
     assert dcov1
     return dcov1
-}  
 
 def add_batch_norm_2d(network, weight_map, input, layer_name):
     gamma = weight_map[layer_name + ".weight"]

@@ -11,8 +11,8 @@ int main(int, char**) {
         LOG(ERROR)<<"img is empty!";
         return -1;
     }
-    std::string model_name = "Yolov5";
-    std::string config_name = "yolov5_config";
+    std::string model_name = "Yolox";
+    std::string config_name = "yolox_config";
     DetectionEngine engine;
     bool err;
     err = engine.init(model_name,config_name);

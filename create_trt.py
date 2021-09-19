@@ -32,9 +32,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--net_path", type=str, default="./model_zoo/onnx")
     parser.add_argument("--save_path", type=str, default="./model_zoo/trt")
-    parser.add_argument("--onnx_name", type=str, default="zfm_add_others_4batch_0626.onnx")
+    parser.add_argument("--onnx_name", type=str, default="yolox_s.onnx")
     parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('--shape', type=list, default=[4,3, 640,640])
+    parser.add_argument('--shape', type=list, default=[1,3, 640,640])
     args = parser.parse_args()
     net_path = args.net_path
     onnx_name = args.onnx_name

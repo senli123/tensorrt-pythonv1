@@ -1,7 +1,8 @@
 #include "detection_engine.h"
 
 REGISTER_CLASS(Yolov5)
-REGISTER_DETE_CONFIG(yolov5_config)
+REGISTER_CLASS(Yolox)
+REGISTER_DETE_CONFIG(yolox_config)
 
 bool DetectionEngine::init(std::string model_name,std::string config_name)
 {   //model初始化

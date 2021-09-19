@@ -18,3 +18,22 @@ const detection_config yolov5_config =
     YOLOV5_FP16, 
     YOLOV5_INT8, 
 };
+const detection_config yolox_config = 
+{
+    YOLOX_ONNXFILENAME,
+    YOLOX_BINFILENAME, 
+    YOLOX_INPUTTENSORNAMES, 
+    YOLOX_OUTPUTTENSORNAMES, 
+    YOLOX_CUDAID,            
+    YOLOX_INPUT_SIZE,
+    YOLOX_BATCH_SIZE, 
+    YOLOX_meanVals,
+    YOLOX_normVals, 
+    YOLOX_ITEM_NUM, 
+    YOLOX_CONFTHRE, 
+    YOLOX_IOUTHRE,  
+    YOLOX_NET_GRID,  
+    YOLOX_ANCHOR_NUM, 
+    YOLOX_FP16, 
+    YOLOX_INT8, 
+};

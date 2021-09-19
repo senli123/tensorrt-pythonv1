@@ -4,6 +4,7 @@
 #include "config_operator.h"
 #include "tools.h"
 #include "yolov5/yolov5_infer.h"
+#include "yolox/yolox_infer.h"
 #include "register.h"
 #include "detection_config.h"
 #include "utils.h"

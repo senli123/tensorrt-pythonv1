@@ -19,3 +19,23 @@
 # define YOLOV5_INT8 false
 
 extern const detection_config yolov5_config;
+
+//------------------YOLOX---------------------------
+# define YOLOX_ONNXFILENAME "/workspace/lisen/_bushu/tensorrt-python/model_zoo/onnx/yolox_s.onnx"   //onnx模型名
+# define YOLOX_BINFILENAME  "/workspace/lisen/_bushu/tensorrt-python/model_zoo/trt/yolox_s.trt"   //bin模型名
+# define YOLOX_INPUTTENSORNAMES "images" //输入节点名
+# define YOLOX_OUTPUTTENSORNAMES "output" //输出节点名
+# define YOLOX_CUDAID  1              //GPUid
+# define YOLOX_INPUT_SIZE 640
+# define YOLOX_BATCH_SIZE 1
+# define YOLOX_meanVals { 0.485, 0.456, 0.406}
+# define YOLOX_normVals {0.229,  0.224,  0.225}
+# define YOLOX_ITEM_NUM 80
+# define YOLOX_CONFTHRE  0.25
+# define YOLOX_IOUTHRE   0.5
+# define YOLOX_NET_GRID  {80,40,20}
+# define YOLOX_ANCHOR_NUM 3
+# define YOLOX_FP16 false
+# define YOLOX_INT8 false
+
+extern const detection_config yolox_config;
