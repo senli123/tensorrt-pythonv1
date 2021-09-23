@@ -70,8 +70,8 @@ bool DetectionEngine::run(std::vector<cv::Mat> &imgs)
             LOG(INFO)<<"instance score :"<<instance.score;
             LOG(INFO)<<"instance bbox :"<<instance.rect.x <<" "<<instance.rect.y<<" "<<instance.rect.width<<" "<<instance.rect.height;
         }
-        std::string path = "./1" + std::to_string(i) + ".bmp";
-        Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
+        //std::string path = "./1" + std::to_string(i) + ".bmp";
+        //Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
     }
     #ifdef RELEASE
     #else

@@ -23,12 +23,16 @@ int main(int, char**) {
     }
     std::vector<cv::Mat> bgr_imgs;
     bgr_imgs.push_back(bgr_img);
-    err = engine.run(bgr_imgs);
-    if(!err)
+    for(int i=0; i<100;i++)
     {
-        LOG(ERROR)<<"engine run failed!";
-        return -1;
+        err = engine.run(bgr_imgs);
+        if(!err)
+        {
+            LOG(ERROR)<<"engine run failed!";
+            return -1;
+        }
     }
+   
     err = engine.uninit();
     return 0;
 }

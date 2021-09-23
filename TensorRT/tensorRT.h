@@ -14,9 +14,14 @@ public:
     void img_size_clear();
     ~TensorRT_Interface()
     {
-        this->engine->destroy();
-     
-        
+        if (this->context)
+        {
+            this->context->destroy();
+        } 
+        if (this->engine)
+        {
+            this->engine->destroy();
+        }
         
     }
 public:

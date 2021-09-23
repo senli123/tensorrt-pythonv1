@@ -105,6 +105,12 @@ bool TensorRT_Interface::build(const TensorRT_data &Tparams)
 	builder->destroy();
 	config->destroy();
 	network->destroy();
+	this->context = this->engine->createExecutionContext();
+	if (!this->context)
+	{
+		LOG(ERROR)<<"[TensorRT_Interface::build] context failed!";
+		return false;
+	}
 	this->buffer.createBuffer(this->engine, this->Tparams.BatchSize);
 	this->hostDataBuffer = static_cast<float *>(this->buffer.getHostBuffer(this->Tparams.InputTensorNames));
 	for (int i = 0; i < this->Tparams.OutputTensorNames.size(); i++)
@@ -116,12 +122,6 @@ bool TensorRT_Interface::build(const TensorRT_data &Tparams)
 
 bool TensorRT_Interface::infer()
 {
-	this->context = this->engine->createExecutionContext();
-	if (!this->context)
-	{
-		LOG(ERROR)<<"[TensorRT_Interface::infer] context failed!";
-		return false;
-	}
     cudaSetDevice(this->Tparams.CudaID);
 	clock_t a = clock();
     this->buffer.copyBuffers(true, false);
@@ -143,7 +143,6 @@ bool TensorRT_Interface::infer()
 	double gpu2cpu=(double)(d-c)/CLOCKS_PER_SEC;
 	//std::cout<<"Total time:"<<endtime<<std::endl;		//s为单位
 	std::cout<<"gpu2cpu time:"<<gpu2cpu*1000<<"ms"<<std::endl;	//ms为单位
-	this->context->destroy();
     return true;
 }
 
