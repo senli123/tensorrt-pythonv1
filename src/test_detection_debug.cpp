@@ -11,8 +11,8 @@ int main(int, char**) {
         LOG(ERROR)<<"img is empty!";
         return -1;
     }
-    std::string model_name = "Yolox";
-    std::string config_name = "yolox_config";
+    std::string model_name = "CenterNet";
+    std::string config_name = "centernet_config";
     DetectionEngine engine;
     bool err;
     err = engine.init(model_name,config_name);
@@ -23,7 +23,7 @@ int main(int, char**) {
     }
     std::vector<cv::Mat> bgr_imgs;
     bgr_imgs.push_back(bgr_img);
-    for(int i=0; i<100;i++)
+    for(int i=0; i<1;i++)
     {
         err = engine.run(bgr_imgs);
         if(!err)

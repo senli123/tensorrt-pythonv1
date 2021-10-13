@@ -1,6 +1,5 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include "dete_utils.h"
 #include <algorithm>
 #include "detection_interface.h"
 // class DetectionUtils
@@ -24,12 +23,13 @@ public:
     }
 private:
     DetectionUtils(){};
-	bool Update_coords(int img_width, int img_height, int resize_w, int resize_h, cv::Rect &rect);
+	
 public:
 	double sigmoid(double x);
 	bool NMS(std::vector<std::vector<InstanceInfo>> &output_infos,std::vector<std::map<int,ClassInfo>> &classinfo, 
 	std::vector<int> &height_list,std::vector<int> &width_list,float &cof_threshold, float &nmsThreshold,
 	int &inputW, int &inputH);
+    bool Update_coords(int img_width, int img_height, int resize_w, int resize_h, cv::Rect &rect);
 
 
 };

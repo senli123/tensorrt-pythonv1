@@ -2,8 +2,9 @@
 
 REGISTER_CLASS(Yolov5)
 REGISTER_CLASS(Yolox)
+REGISTER_CLASS(CenterNet)
 REGISTER_DETE_CONFIG(yolox_config)
-
+REGISTER_DETE_CONFIG(centernet_config)
 bool DetectionEngine::init(std::string model_name,std::string config_name)
 {   //model初始化
     bool err;
@@ -70,8 +71,8 @@ bool DetectionEngine::run(std::vector<cv::Mat> &imgs)
             LOG(INFO)<<"instance score :"<<instance.score;
             LOG(INFO)<<"instance bbox :"<<instance.rect.x <<" "<<instance.rect.y<<" "<<instance.rect.width<<" "<<instance.rect.height;
         }
-        //std::string path = "./1" + std::to_string(i) + ".bmp";
-        //Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
+        std::string path = "./123" + std::to_string(i) + ".bmp";
+        Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
     }
     #ifdef RELEASE
     #else

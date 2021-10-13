@@ -33,6 +33,7 @@ typedef struct tag_detection_config
     int anchor_num;
     bool FP16;
     bool INT8;
+    int top_num;
 } detection_config;
 
 
