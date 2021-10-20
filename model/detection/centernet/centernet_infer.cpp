@@ -1,5 +1,4 @@
 #include "centernet_infer.h"
-const std::vector<int> grid = { 80,40,20 };
 //模型构建
 bool CenterNet::Model_build(const detection_config &input_config)
 {
