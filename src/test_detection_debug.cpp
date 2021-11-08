@@ -11,8 +11,8 @@ int main(int, char**) {
         LOG(ERROR)<<"img is empty!";
         return -1;
     }
-    std::string model_name = "CenterNet";
-    std::string config_name = "centernet_config";
+    std::string model_name = "RetinaNet";
+    std::string config_name = "retinanet_config";
     DetectionEngine engine;
     bool err;
     err = engine.init(model_name,config_name);

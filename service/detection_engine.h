@@ -6,6 +6,8 @@
 #include "yolov5/yolov5_infer.h"
 #include "yolox/yolox_infer.h"
 #include "centernet/centernet_infer.h"
+#include "fcos/fcos_infer.h"
+#include "retinanet/retinanet_infer.h"
 #include "register.h"
 #include "detection_config.h"
 #include "utils.h"

@@ -12,8 +12,8 @@ bool Yolov5::Model_build(const detection_config &input_config)
         config.input_name,
         output_names,
         config.batch_size,
-        config.input_size,
-        config.input_size,
+        config.input_h,
+        config.input_w,
         config.FP16,
         config.INT8
     };
@@ -86,7 +86,7 @@ bool Yolov5::PreProcess(cv::Mat &bgr_img, std::vector<cv::Mat> &rgb_channel_img)
     {
         cv::Mat rgb_img;
         cv::cvtColor(bgr_img, rgb_img, cv::COLOR_BGR2RGB);
-        cv::resize(rgb_img, rgb_img, cv::Size(config.input_size, config.input_size));
+        cv::resize(rgb_img, rgb_img, cv::Size(config.input_w, config.input_h));
         cv::Mat rgb_resize_img;
         rgb_img.convertTo(rgb_resize_img,CV_32F);
         rgb_resize_img = rgb_resize_img/255.0f;
@@ -154,8 +154,8 @@ bool Yolov5::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos, s
                             start_index +=config.item_num;
                             continue;
                         }
-                        x = ( DetectionUtils::get_instance().sigmoid(x)*2 - 0.5 + x_grid) * config.input_size / grid;
-                        y = ( DetectionUtils::get_instance().sigmoid(y)*2 - 0.5 + y_grid) * config.input_size / grid;
+                        x = ( DetectionUtils::get_instance().sigmoid(x)*2 - 0.5 + x_grid) * config.input_w / grid;
+                        y = ( DetectionUtils::get_instance().sigmoid(y)*2 - 0.5 + y_grid) * config.input_h / grid;
                         w = pow(DetectionUtils::get_instance().sigmoid(w)*2, 2) * anchors[anchor_index *2];
                         h = pow(DetectionUtils::get_instance().sigmoid(h)*2, 2) * anchors[anchor_index *2 + 1];
                         double r_x = x - w/2;
@@ -187,7 +187,7 @@ bool Yolov5::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos, s
     err = DetectionUtils::get_instance().NMS(output_infos, classinfo,
                                             height_list, width_list,
                                             config.confthre, config.iouthre,
-                                            config.input_size,config.input_size);
+                                            config.input_w,config.input_h);
     if (!err)
     {
         LOG(ERROR)<<"[Yolov5::PostProcess] NMS process failed!";

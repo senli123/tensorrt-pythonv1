@@ -69,7 +69,7 @@ detection_config Store::FindDetectionConfig(const string& config_name)
     if (it == m_register_detection.end())
     {
         detection_config temp_config;
-        temp_config.input_size = 0;
+        temp_config.input_h = 0;
         return temp_config;
     }	
     else {

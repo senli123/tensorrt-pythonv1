@@ -90,6 +90,7 @@ bool TensorRT_Interface::build(const TensorRT_data &Tparams)
 			config->destroy();
 			return false;
 		}
+		initLibNvInferPlugins(nullptr, "");
 		this->engine = runtime->deserializeCudaEngine(model_mem, model_size, nullptr);
 		if (!this->engine)
 		{

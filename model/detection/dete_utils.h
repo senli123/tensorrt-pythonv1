@@ -25,7 +25,8 @@ private:
     DetectionUtils(){};
 	
 public:
-	double sigmoid(double x);
+template <typename T>
+	T sigmoid(T x);
 	bool NMS(std::vector<std::vector<InstanceInfo>> &output_infos,std::vector<std::map<int,ClassInfo>> &classinfo, 
 	std::vector<int> &height_list,std::vector<int> &width_list,float &cof_threshold, float &nmsThreshold,
 	int &inputW, int &inputH);
@@ -33,3 +34,7 @@ public:
 
 
 };
+template <typename T>
+T DetectionUtils::sigmoid(T x){
+    return 1 / (1+exp(-x));
+}

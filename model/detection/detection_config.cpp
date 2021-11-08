@@ -6,7 +6,8 @@ const detection_config yolov5_config =
     YOLOV5_INPUTTENSORNAMES, 
     YOLOV5_OUTPUTTENSORNAMES, 
     YOLOV5_CUDAID,            
-    YOLOV5_INPUT_SIZE,
+    YOLOV5_INPUT_H,
+    YOLOV5_INPUT_W,
     YOLOV5_BATCH_SIZE, 
     YOLOV5_meanVals,
     YOLOV5_normVals, 
@@ -25,7 +26,8 @@ const detection_config yolox_config =
     YOLOX_INPUTTENSORNAMES, 
     YOLOX_OUTPUTTENSORNAMES, 
     YOLOX_CUDAID,            
-    YOLOX_INPUT_SIZE,
+    YOLOX_INPUT_H,
+    YOLOX_INPUT_W,
     YOLOX_BATCH_SIZE, 
     YOLOX_meanVals,
     YOLOX_normVals, 
@@ -45,7 +47,8 @@ const detection_config centernet_config =
 	CENTERNET_INPUTTENSORNAMES,
 	CENTERNET_OUTPUTTENSORNAMES,
 	CENTERNET_CUDAID,
-	CENTERNET_INPUT_SIZE,
+	CENTERNET_INPUT_H,
+    CENTERNET_INPUT_W,
 	CENTERNET_BATCH_SIZE,
 	CENTERNET_meanVals,
 	CENTERNET_normVals,
@@ -57,4 +60,48 @@ const detection_config centernet_config =
 	CENTERNET_FP16,
 	CENTERNET_INT8,
 	CENTERNET_TOP
+};
+
+const detection_config fcos_config
+{
+    FCOS_ONNXFILENAME,
+    FCOS_BINFILENAME,  
+    FCOS_INPUTTENSORNAMES, 
+    FCOS_OUTPUTTENSORNAMES, 
+    FCOS_CUDAID,  
+    FCOS_INPUT_H, 
+    FCOS_INPUT_W, 
+    FCOS_BATCH_SIZE, 
+    FCOS_meanVals, 
+    FCOS_normVals, 
+    FCOS_ITEM_NUM, 
+    FCOS_CONFTHRE,  
+    FCOS_IOUTHRE,  
+    FCOS_NET_GRID,  
+    FCOS_ANCHOR_NUM, 
+    FCOS_FP16, 
+    FCOS_INT8, 
+    FCOS_TOP
+};
+
+const detection_config retinanet_config
+{
+    RETINANET_ONNXFILENAME,
+    RETINANET_BINFILENAME,  
+    RETINANET_INPUTTENSORNAMES, 
+    RETINANET_OUTPUTTENSORNAMES, 
+    RETINANET_CUDAID,  
+    RETINANET_INPUT_H, 
+    RETINANET_INPUT_W, 
+    RETINANET_BATCH_SIZE, 
+    RETINANET_meanVals, 
+    RETINANET_normVals, 
+    RETINANET_ITEM_NUM, 
+    RETINANET_CONFTHRE,  
+    RETINANET_IOUTHRE,  
+    RETINANET_NET_GRID,  
+    RETINANET_ANCHOR_NUM, 
+    RETINANET_FP16, 
+    RETINANET_INT8, 
+    RETINANET_TOP
 };

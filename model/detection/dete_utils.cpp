@@ -1,8 +1,8 @@
 #include "dete_utils.h"
-double DetectionUtils::sigmoid(double x)
-{
-    return (1 / (1 + exp(-x)));
-}
+// double DetectionUtils::sigmoid(double x)
+// {
+//     return (1 / (1 + exp(-x)));
+// }
 bool DetectionUtils::NMS(std::vector<std::vector<InstanceInfo>> &output_infos,std::vector<std::map<int,ClassInfo>> &classinfo, 
 std::vector<int> &height_list,std::vector<int> &width_list,float &cof_threshold, float &nmsThreshold,int &inputW, int &inputH)
 {
@@ -45,6 +45,36 @@ std::vector<int> &height_list,std::vector<int> &width_list,float &cof_threshold,
     return true;
     
 }
+// bool DetectionUtils::Update_coords(int img_width, int img_height, int resize_w, int resize_h, cv::Rect &rect)
+// {
+//     try
+//     {
+//         float x1 = rect.x;
+//         float y1 = rect.y;
+//         float x2 = rect.x + rect.width;
+//         float y2 = rect.y + rect.height;
+//         float gain_x = float(resize_w) /float(img_width);
+//         float gain_y = float(resize_h) /float(img_height);
+//         x1 /= gain_x;
+//         y1 /= gain_y;
+//         x2 /= gain_x;
+//         y2 /= gain_y;
+//         x1 = std::max(float(0),x1);
+//         y1 = std::max(float(0),y1);
+//         x2 = std::min(float(img_width -1),x2);
+//         y2 = std::min(float(img_height-1),y2);
+//         rect.x = x1;
+//         rect.y = y1;
+//         rect.width = x2-x1;
+//         rect.height = y2-y1;
+//     }
+//     catch(const std::exception& e)
+//     {
+//         return false;
+//     }
+//     return true;
+
+// }
 bool DetectionUtils::Update_coords(int img_width, int img_height, int resize_w, int resize_h, cv::Rect &rect)
 {
     try
@@ -55,10 +85,17 @@ bool DetectionUtils::Update_coords(int img_width, int img_height, int resize_w, 
         float y2 = rect.y + rect.height;
         float gain_x = float(resize_w) /float(img_width);
         float gain_y = float(resize_h) /float(img_height);
-        x1 /= gain_x;
-        y1 /= gain_y;
-        x2 /= gain_x;
-        y2 /= gain_y;
+        float gain = std::min(gain_x,gain_y);
+        float pad_w = (resize_w - img_width * gain) / 2.0;
+	    float pad_h = (resize_h - img_height * gain) / 2.0;
+        x1 -= pad_w;
+        y1 -= pad_h;
+        x2 -= pad_w;
+        y2 -= pad_h;
+        x1 /= gain;
+        y1 /= gain;
+        x2 /= gain;
+        y2 /= gain;
         x1 = std::max(float(0),x1);
         y1 = std::max(float(0),y1);
         x2 = std::min(float(img_width -1),x2);

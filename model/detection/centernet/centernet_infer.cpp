@@ -11,8 +11,8 @@ bool CenterNet::Model_build(const detection_config &input_config)
 		config.input_name,
 		output_names,
 		config.batch_size,
-		config.input_size,
-		config.input_size,
+		config.input_h,
+		config.input_w,
 		config.FP16,
 		config.INT8
 	};
@@ -85,7 +85,7 @@ bool CenterNet::PreProcess(cv::Mat &bgr_img, std::vector<cv::Mat> &rgb_channel_i
 	{
 		cv::Mat rgb_img;
 		cv::cvtColor(bgr_img, rgb_img, cv::COLOR_BGR2RGB);
-		cv::resize(rgb_img, rgb_img, cv::Size(config.input_size, config.input_size));
+		cv::resize(rgb_img, rgb_img, cv::Size(config.input_w, config.input_h));
 		cv::Mat rgb_resize_img;
 		rgb_img.convertTo(rgb_resize_img, CV_32F);
 		rgb_resize_img = rgb_resize_img / 255.0f;
@@ -118,7 +118,7 @@ bool CenterNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
 			return false;
 		}
 		//循环每个batch和每个预选点得到真正的框
-		int spacial_size = (config.input_size / 4)*(config.input_size / 4);
+		int spacial_size = (config.input_h / 4)*(config.input_w / 4);
 		 float *scale0 = wh;
 		// float *scale1 = wh + spacial_size;
 
@@ -136,7 +136,7 @@ bool CenterNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
 				float score = instance[1];
 				float h_index = instance[2];
 				float w_index = instance[3];
-				int index = h_index * config.input_size / 4 + w_index;
+				int index = h_index * config.input_w / 4 + w_index;
 				int x1 = (int)(w_index + offset0[index]) * 4;
 				// int y1 = (int)(h_index + offset1[index]) * 4;
                 int y1 = (int)(h_index + offset0[index + spacial_size]) * 4;
@@ -148,7 +148,7 @@ bool CenterNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
 				rect.y = y1 - h/2;
 				rect.width = w;
 				rect.height = h;
-				err = DetectionUtils::get_instance().Update_coords(width_list[batch_index], height_list[batch_index], config.input_size, config.input_size, rect);
+				err = DetectionUtils::get_instance().Update_coords(width_list[batch_index], height_list[batch_index], config.input_w, config.input_h, rect);
 				InstanceInfo output_instance;
 				output_instance.class_id = class_id;
 				output_instance.score = score;
@@ -171,17 +171,17 @@ bool CenterNet::get_index(float* max_heatmap, float* heatmap, std::vector<std::v
 	{
 		std::vector<std::vector<std::vector<float>>> temp_fscore_max;
 		//循环batch
-		int feature_size = config.input_size * config.input_size / 16;
+		int feature_size = config.input_h * config.input_w / 16;
 		for (int batch = 0; batch < config.batch_size; batch++)
 		{
 			std::vector<std::vector<float>> batch_fscore_max;
 			for (int class_index = 0; class_index < config.item_num; class_index++)
 			{
-				for (int h_index = 0; h_index < config.input_size/4; h_index++)
+				for (int h_index = 0; h_index < config.input_h/4; h_index++)
 				{
-					for (int w_index = 0; w_index < config.input_size/4; w_index++)
+					for (int w_index = 0; w_index < config.input_w/4; w_index++)
 					{
-						int index = batch * config.item_num * feature_size + class_index * feature_size + h_index * config.input_size/4 + w_index;
+						int index = batch * config.item_num * feature_size + class_index * feature_size + h_index * config.input_w/4 + w_index;
 						if (max_heatmap[index] == heatmap[index]) //满足条件挑出对应的预选信息
 						{
 							//class, score, h_index, w_index

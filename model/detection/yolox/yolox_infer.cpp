@@ -12,8 +12,8 @@ bool Yolox::Model_build(const detection_config &input_config)
         config.input_name,
         output_names,
         config.batch_size,
-        config.input_size,
-        config.input_size,
+        config.input_h,
+        config.input_w,
         config.FP16,
         config.INT8
     };
@@ -86,7 +86,7 @@ bool Yolox::PreProcess(cv::Mat &bgr_img, std::vector<cv::Mat> &rgb_channel_img)
     {
         //cv::Mat rgb_img;
         //cv::cvtColor(bgr_img, rgb_img, cv::COLOR_BGR2RGB);
-        cv::resize(bgr_img, bgr_img, cv::Size(config.input_size, config.input_size));
+        cv::resize(bgr_img, bgr_img, cv::Size(config.input_w, config.input_h));
         // cv::Mat rgb_resize_img;
         bgr_img.convertTo(bgr_img,CV_32F);
         // rgb_resize_img = rgb_resize_img/255.0f;
@@ -153,7 +153,7 @@ bool Yolox::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos, st
     err = DetectionUtils::get_instance().NMS(output_infos, classinfo,
                                             height_list, width_list,
                                             config.confthre, config.iouthre,
-                                            config.input_size,config.input_size);
+                                            config.input_w,config.input_h);
     if (!err)
     {
         LOG(ERROR)<<"[Yolox::PostProcess] NMS process failed!";
@@ -166,7 +166,7 @@ bool Yolox::get_anchors(std::vector<GridAndStride> &grid_strides)
 {
     for(auto stride : strides)
     {
-        int num_grid = config.input_size / stride;
+        int num_grid = config.input_w / stride;
         for(int g1 = 0; g1 < num_grid; g1++)
         {
             for(int g0 = 0; g0 < num_grid; g0++)

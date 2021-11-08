@@ -6,7 +6,8 @@
 # define YOLOV5_INPUTTENSORNAMES "images" //输入节点名
 # define YOLOV5_OUTPUTTENSORNAMES "397,458,519" //输出节点名
 # define YOLOV5_CUDAID  1              //GPUid
-# define YOLOV5_INPUT_SIZE 640
+# define YOLOV5_INPUT_H 640
+# define YOLOV5_INPUT_W 640
 # define YOLOV5_BATCH_SIZE 1
 # define YOLOV5_meanVals { 0.485, 0.456, 0.406}
 # define YOLOV5_normVals {0.229,  0.224,  0.225}
@@ -26,7 +27,8 @@ extern const detection_config yolov5_config;
 # define YOLOX_INPUTTENSORNAMES "images" //输入节点名
 # define YOLOX_OUTPUTTENSORNAMES "output" //输出节点名
 # define YOLOX_CUDAID  1              //GPUid
-# define YOLOX_INPUT_SIZE 640
+# define YOLOX_INPUT_H 640
+# define YOLOX_INPUT_W 640
 # define YOLOX_BATCH_SIZE 1
 # define YOLOX_meanVals { 0.485, 0.456, 0.406}
 # define YOLOX_normVals {0.229,  0.224,  0.225}
@@ -46,7 +48,8 @@ extern const detection_config yolox_config;
 # define CENTERNET_INPUTTENSORNAMES "input" //输入节点名
 # define CENTERNET_OUTPUTTENSORNAMES "hv_max,hm,wh,reg" //输出节点名
 # define CENTERNET_CUDAID  0              //GPUid
-# define CENTERNET_INPUT_SIZE 512
+# define CENTERNET_INPUT_H 512
+# define CENTERNET_INPUT_W 512
 # define CENTERNET_BATCH_SIZE 1
 # define CENTERNET_meanVals {0.408, 0.447, 0.470}
 # define CENTERNET_normVals {0.289, 0.274, 0.278}
@@ -61,3 +64,45 @@ extern const detection_config yolox_config;
 # define CENTERNET_INT8 false
 # define CENTERNET_TOP 100
 extern const detection_config centernet_config;
+
+//------------------Fcos---------------------------
+# define FCOS_ONNXFILENAME "/workspace/lisen/_bushu/tensorrt-python/model_zoo/onnx/fcos_v1.onnx"   //onnx模型名
+# define FCOS_BINFILENAME  "/workspace/lisen/_bushu/tensorrt-python/model_zoo/trt/fcos_v1.trt"   //bin模型名
+# define FCOS_INPUTTENSORNAMES "input" //输入节点名
+# define FCOS_OUTPUTTENSORNAMES "700,643,697,810,753,807,920,863,917,1030,973,1027,1140,1083,1137" //输出节点名
+# define FCOS_CUDAID  0              //GPUid
+# define FCOS_INPUT_H 800
+# define FCOS_INPUT_W 1216
+# define FCOS_BATCH_SIZE 1
+# define FCOS_meanVals {102.9801, 115.9465, 122.7717}
+# define FCOS_normVals {1.0, 1.0, 1.0}
+# define FCOS_ITEM_NUM 80
+# define FCOS_CONFTHRE  0.25
+# define FCOS_IOUTHRE   0.5
+# define FCOS_NET_GRID  {8,16,32,64,128}
+# define FCOS_ANCHOR_NUM 3
+# define FCOS_FP16 false
+# define FCOS_INT8 false
+# define FCOS_TOP 100
+extern const detection_config fcos_config;
+
+//------------------retinanet---------------------------
+# define RETINANET_ONNXFILENAME "/workspace/lisen/_bushu/tensorrt-python/model_zoo/onnx/retinanet.onnx"   //onnx模型名
+# define RETINANET_BINFILENAME  "/workspace/lisen/_bushu/tensorrt-python/model_zoo/trt/retinanet.trt"   //bin模型名
+# define RETINANET_INPUTTENSORNAMES "input" //输入节点名
+# define RETINANET_OUTPUTTENSORNAMES "591,592,609,610,627,628,645,646,663,664" //输出节点名
+# define RETINANET_CUDAID  0              //GPUid
+# define RETINANET_INPUT_H 1333
+# define RETINANET_INPUT_W 800
+# define RETINANET_BATCH_SIZE 1
+# define RETINANET_meanVals {123.675, 116.28, 103.53}
+# define RETINANET_normVals {58.395, 57.12, 57.375}
+# define RETINANET_ITEM_NUM 80
+# define RETINANET_CONFTHRE  0.25
+# define RETINANET_IOUTHRE   0.5
+# define RETINANET_NET_GRID  {8,16,32,64,128}
+# define RETINANET_ANCHOR_NUM 9
+# define RETINANET_FP16 false
+# define RETINANET_INT8 false
+# define RETINANET_TOP 100
+extern const detection_config retinanet_config;

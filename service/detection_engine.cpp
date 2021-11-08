@@ -3,8 +3,13 @@
 REGISTER_CLASS(Yolov5)
 REGISTER_CLASS(Yolox)
 REGISTER_CLASS(CenterNet)
+REGISTER_CLASS(Fcos)
+REGISTER_CLASS(RetinaNet)
+
 REGISTER_DETE_CONFIG(yolox_config)
 REGISTER_DETE_CONFIG(centernet_config)
+REGISTER_DETE_CONFIG(fcos_config)
+REGISTER_DETE_CONFIG(retinanet_config)
 bool DetectionEngine::init(std::string model_name,std::string config_name)
 {   //model初始化
     bool err;
@@ -32,7 +37,7 @@ bool DetectionEngine::init(std::string model_name,std::string config_name)
     err = model->Model_build(config);
 #else
     detection_config config= DetectionConfigFactory::createStruct(config_name);
-    if (config.input_size == 0)
+    if (config.input_h == 0)
     {
         std::cout << "input config_name not in :" << std::endl;
         Store::getInstance()->GetDetectionConfigKeys();
@@ -71,7 +76,7 @@ bool DetectionEngine::run(std::vector<cv::Mat> &imgs)
             LOG(INFO)<<"instance score :"<<instance.score;
             LOG(INFO)<<"instance bbox :"<<instance.rect.x <<" "<<instance.rect.y<<" "<<instance.rect.width<<" "<<instance.rect.height;
         }
-        std::string path = "./123" + std::to_string(i) + ".bmp";
+        std::string path = "./321" + std::to_string(i) + ".bmp";
         Utils::get_instance().printBbox(imgs.at(i), outputinfo, path);
     }
     #ifdef RELEASE
@@ -101,7 +106,8 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
         std::string dete_input_name;
         std::string dete_output_name;
         int dete_cuda_id;
-        int dete_input_size;
+        int dete_input_h;
+        int dete_input_w;
         int dete_batch_size;
         float dete_meanVals[3];
         float dete_normVals[3];
@@ -149,9 +155,16 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
             LOG(ERROR)<<"parse cuda id failed!";
             return false;
         }
-        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_SIZE))
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_H))
         {
-            dete_input_size = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_SIZE).c_str());
+            dete_input_h = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_H).c_str());
+        }else{
+            LOG(ERROR)<<"parse input h failed!";
+            return false;
+        }
+        if( ""!= ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_W))
+        {
+            dete_input_w = atoi(ConfigOperator::getIns().getValue(CFG_DETECTION, config_name+CFG_INPUT_W).c_str());
         }else{
             LOG(ERROR)<<"parse input size failed!";
             return false;
@@ -272,7 +285,8 @@ bool DetectionEngine::ParseConfig(std::string config_name, detection_config &con
         strcpy(config.input_name,dete_input_name.c_str());
         strcpy(config.output_name,dete_output_name.c_str());
         config.cuda_id = dete_cuda_id;
-        config.input_size = dete_input_size;
+        config.input_h = dete_input_h;
+        config.input_w = dete_input_w;
         config.batch_size = dete_batch_size;
         memcpy(config.meanVals, dete_meanVals, sizeof(dete_meanVals));
         memcpy(config.normVals, dete_normVals, sizeof(dete_normVals));

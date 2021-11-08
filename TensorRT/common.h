@@ -5,7 +5,7 @@
 #include <string>
 #include <numeric>
 #include <cuda_runtime.h>
-
+#include <NvInferPlugin.h>
 #include "NvInfer.h"
 
 

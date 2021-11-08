@@ -22,14 +22,15 @@ typedef struct tag_detection_config
     char input_name[100];
     char output_name[100];
     int cuda_id;
-    int input_size;
+    int input_h;
+    int input_w;
     int batch_size;
     float meanVals[3];
     float normVals[3];
     int item_num;
     float confthre;
     float iouthre;
-    int net_grid[3];
+    int net_grid[100];
     int anchor_num;
     bool FP16;
     bool INT8;
