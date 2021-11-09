@@ -1,24 +1,17 @@
 #include "retinanet_infer.h"
 float ratios[3] = { 0.5, 1.  ,2. };
 float scales[3] = { 1. ,1.25992105 , 1.58740105 };
-void get_anchor(float anchor[9][4],float sizes, float ratios[], float scales[])
+void get_anchor(float anchor[9][2],float sizes, float ratios[], float scales[])
 {
 	for (int j = 0; j < 3; j++)
 	{
 		float ratio = ratios[j];
 		for (int i = 0; i < 3; i++)
 		{
-			float area = std::pow((scales[i] * sizes * 4),2);
-			float w = std::sqrt(area/ ratio);
-			float h = w * ratio;
-			float x1 = 0 - w / 2;
-			float y1 = 0 - h / 2;
-			float x2 = w / 2;
-			float y2 = h / 2;
-			anchor[j * 3 + i][0] = x1;
-			anchor[j * 3 + i][1] = y1;
-			anchor[j * 3 + i][2] = x2;
-			anchor[j * 3 + i][3] = y2;
+            float h = sqrtf(ratio);
+            float w  = 1/ h;
+			anchor[j * 3 + i][0] = w * scales[i] *4;
+			anchor[j * 3 + i][1] = h * scales[i] *4;
 		}
 
 	}
@@ -132,7 +125,7 @@ bool RetinaNet::_imresize(cv::Mat &rgb_img, cv::Mat &resize_img)
     int img_width = rgb_img.cols;
     int img_height = rgb_img.rows;
     //计算放大比例
-    float ratio = std::min( (float)config.input_h /(float)img_height, (float)config.input_w /(float)img_height);
+    float ratio = std::min( (float)config.input_h /(float)img_height, (float)config.input_w /(float)img_width);
     int new_width = round(img_width * ratio);
     int new_height = round(img_height * ratio);
     //进行初次放大
@@ -178,31 +171,24 @@ bool RetinaNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
         float* output_reg = outputs[scale_index *2 +1]; //batch ,(4 *9), h, w 
         for(int batch_index = 0; batch_index < config.batch_size; batch_index ++)
         {
-            for(int c_index = 0; c_index < channel_num ; c_index ++)
+            int h_num = (int)ceil((float)config.input_h / (float)(config.net_grid[scale_index]));
+            int w_num = (int)ceil((float)config.input_w / (float)(config.net_grid[scale_index]));
+            for(int h_index = 0; h_index < h_num ; h_index ++)
             {
-                int h_num = (int)ceil((float)config.input_h / (float)(config.net_grid[scale_index]));
-                int w_num = (int)ceil((float)config.input_w / (float)(config.net_grid[scale_index]));
-                for(int h_index = 0; h_index < h_num ; h_index ++)
+                for(int w_index = 0; w_index < w_num; w_index ++)
                 {
-                    for(int w_index = 0; w_index < w_num; w_index ++)
+                    //计算每一个坐标在buffer中的起始位置
+                    int index = batch_index * channel_num * h_num * w_num + h_index * w_num + w_index;
+                    for(int c_index = 0; c_index < channel_num ; c_index ++)
                     {
-                        //计算当前在buffer中的位置
-                        int index = batch_index * channel_num * h_num * w_num +
-                        c_index * h_num * w_num + h_index * w_num + w_index;
-                        float score = DetectionUtils::get_instance().sigmoid(output_cls[index]);
+                        float score = DetectionUtils::get_instance().sigmoid(output_cls[c_index * h_num * w_num +index]);
                         if( score >config.confthre)
                         {
                             //计算当前在哪个anchor上，对应的class_id是什么
                             int anchor_id = c_index / 80;
                             int class_id = c_index  % 80;
-                            // int anchor_id = c_index % 9;
-                            // int class_id = c_index  / 9;
-                            //计算原始anchor
-                            float anchor_x1 = anchors[scale_index][anchor_id][0] + (w_index) * config.net_grid[scale_index];
-                            float anchor_y1 = anchors[scale_index][anchor_id][1] + (h_index) * config.net_grid[scale_index];
-                            float anchor_x2 = anchors[scale_index][anchor_id][2] + (w_index) * config.net_grid[scale_index];
-                            float anchor_y2 = anchors[scale_index][anchor_id][3] + (h_index) * config.net_grid[scale_index];
-                            //计算网络输出4个值的位置
+
+                            //计算网络输出的四个坐标位置
                             int output_x_index = batch_index * channel_reg_num * h_num * w_num + 
                             (anchor_id * 4)* h_num * w_num + h_index * w_num + w_index;
                             int output_y_index = batch_index * channel_reg_num * h_num * w_num + 
@@ -211,17 +197,20 @@ bool RetinaNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
                             (anchor_id * 4 + 2) * h_num * w_num + h_index * w_num + w_index;
                             int output_h_index = batch_index * channel_reg_num * h_num * w_num + 
                             (anchor_id * 4 + 3) * h_num * w_num + h_index * w_num + w_index;
+
                             float output_x = output_reg[output_x_index] * 1.0;
                             float output_y = output_reg[output_y_index] * 1.0;
                             float output_w = output_reg[output_w_index] * 1.0;
                             float output_h = output_reg[output_h_index] * 1.0;
-                            // output_x = (anchor_x1 + anchor_x2) * 0.5 + output_x * (anchor_x2 - anchor_x1);
-                            // output_y = (anchor_y1 + anchor_y2) * 0.5 + output_y * (anchor_y2 - anchor_y1);
-                            output_x = (w_index) * config.net_grid[scale_index] + output_x * (anchor_x2 - anchor_x1);
-                            output_y = (h_index) * config.net_grid[scale_index] + output_y * (anchor_y2 - anchor_y1);
-                            output_w =  exp(output_w)*(anchor_x2 - anchor_x1) *config.net_grid[scale_index];
-                            output_h =  exp(output_h)*(anchor_y2 - anchor_y1) *config.net_grid[scale_index];
-                            cv::Rect rect = cv::Rect(round(output_x),round(output_y),round(output_w),round(output_h));
+
+                            //计算真实坐标
+                            float cx_b = output_x * anchors[scale_index][anchor_id][0] * config.net_grid[scale_index] + w_index * config.net_grid[scale_index];
+                            float cy_b = output_y * anchors[scale_index][anchor_id][1] * config.net_grid[scale_index] + h_index * config.net_grid[scale_index];
+                            float w_b = exp(output_w) * anchors[scale_index][anchor_id][0] * config.net_grid[scale_index];
+                            float h_b = exp(output_h) * anchors[scale_index][anchor_id][1] * config.net_grid[scale_index];
+                            float rx_b = cx_b - w_b/2;
+                            float ry_b = cy_b - h_b/2;
+                            cv::Rect rect = cv::Rect(round(rx_b),round(ry_b),round(w_b),round(h_b));
                             if (classinfo[batch_index].find(class_id)!=classinfo[batch_index].end())
                             {
                                 classinfo[batch_index][class_id].o_rect.push_back(rect);
@@ -234,8 +223,8 @@ bool RetinaNet::PostProcess(std::vector<std::vector<InstanceInfo>> &output_infos
 
                             }
                         }
-
                     }
+
                 }
             }
         }

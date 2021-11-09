@@ -98,7 +98,7 @@ extern const detection_config fcos_config;
 # define RETINANET_meanVals {123.675, 116.28, 103.53}
 # define RETINANET_normVals {58.395, 57.12, 57.375}
 # define RETINANET_ITEM_NUM 80
-# define RETINANET_CONFTHRE  0.25
+# define RETINANET_CONFTHRE  0.6
 # define RETINANET_IOUTHRE   0.5
 # define RETINANET_NET_GRID  {8,16,32,64,128}
 # define RETINANET_ANCHOR_NUM 9

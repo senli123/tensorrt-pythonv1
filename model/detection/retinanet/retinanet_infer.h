@@ -18,5 +18,5 @@ private:
     bool get_anchors();
 private:
     detection_config config;
-    float anchors[5][9][4];
+    float anchors[5][9][2];
 };
