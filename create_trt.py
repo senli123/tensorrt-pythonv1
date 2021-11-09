@@ -32,9 +32,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--net_path", type=str, default="./model_zoo/onnx")
     parser.add_argument("--save_path", type=str, default="./model_zoo/trt")
-    parser.add_argument("--onnx_name", type=str, default="retinanet.onnx")
+    parser.add_argument("--onnx_name", type=str, default="refinenet.onnx")
     parser.add_argument('--batch_size', type=int, default=1)
-    parser.add_argument('--shape', type=list, default=[1,3,1333, 800])
+    parser.add_argument('--shape', type=list, default=[1,3,512, 512])
     args = parser.parse_args()
     net_path = args.net_path
     onnx_name = args.onnx_name

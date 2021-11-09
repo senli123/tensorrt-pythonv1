@@ -16,4 +16,5 @@ private:
     bool PostProcess(std::vector<float*> &outputs,std::vector<cv::Mat> &mask_imgs, std::vector<int> &height_list, std::vector<int> &width_list);
 private:
     segmentation_config config;
+   
 };

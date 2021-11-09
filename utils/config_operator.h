@@ -13,7 +13,7 @@ const std::string CFG_ITEM_BREAK = "=";
 
 const std::string CFG_CLASSIFICATION = "classification";
 const std::string CFG_DETECTION = "detection";
-
+const std::string CFG_SEGMENTATION = "segmentation";
 const std::string CFG_ONNX_PATH = "_onnx_path";
 const std::string CFG_BIN_PATH = "_bin_path";
 const std::string CFG_INPUT_NAME = "_input_name";

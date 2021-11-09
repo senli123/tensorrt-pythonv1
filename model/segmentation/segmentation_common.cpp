@@ -1,5 +1,5 @@
 #include "segmentation_common.h"
-float mask_color[11][3] = { {0, 0, 0},
+int mask_color[11][3] = { {0, 0, 0},
                             {255, 248, 220},
                             {100, 149, 237},
                             {102, 205, 170},
@@ -7,9 +7,9 @@ float mask_color[11][3] = { {0, 0, 0},
                             {160, 32, 240},
                             {255, 64, 64},
                             {139, 69, 19},
-                            {255,0,0},
-                            {0,255,0},
-                            {0,0,255}};
+                            {255, 0,  0},
+                            {0,  255, 0},
+                            {0,  0, 255}};
                             
 bool SegmentationCommon::Model_build(const segmentation_config &input_config)
 {
@@ -119,18 +119,18 @@ std::vector<int> &height_list, std::vector<int> &width_list)
         for (int batch = 0; batch < config.batch_size; batch++)
         {
             //每次要返回的img
-            cv::Mat mask_mat = cv::Mat(config.input_size,config.input_size,CV_8UC3); 
-            for (int y = 0; y < config.input_size; y++)
+            cv::Mat mask_mat = cv::Mat(config.input_size / 4,config.input_size / 4,CV_8UC3); 
+            for (int y = 0; y < config.input_size / 4; y++)
             {
-                for (int x = 0; x < config.input_size; x++)
+                for (int x = 0; x < config.input_size / 4; x++)
                 {
                     //在该通道上计算每个值的softmax并求最大值index
-                    int start_index = batch * config.input_size * config.input_size * config.class_num + y * config.input_size + x;
+                    int start_index = batch * config.input_size / 4 * config.input_size / 4 * config.class_num + y * config.input_size / 4 + x;
                     int max_index  = 0;
                     float max_score = 0.0;
                     for (int c = 0; c < config.class_num; c++)
                     {
-                       float t = out[c * config.input_size * config.input_size + start_index];
+                        float t = out[c * config.input_size / 4 * config.input_size / 4 + start_index];
                         if (t > max_score)
                         {
                             max_score = t;
@@ -143,7 +143,9 @@ std::vector<int> &height_list, std::vector<int> &width_list)
                 }
             }
             //batch结束后将该图片返回
-            mask_imgs.push_back(mask_mat);
+            cv::Mat rgb_mask_img;
+            cv::cvtColor(mask_mat, rgb_mask_img, cv::COLOR_RGB2BGR);
+            mask_imgs.push_back(rgb_mask_img);
         }
         
     }

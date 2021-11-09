@@ -99,7 +99,8 @@
         "stdio.h": "c",
         "segmentation_config.h": "c",
         "segmentation_interface.h": "c",
-        "detection_config.h": "c"
+        "detection_config.h": "c",
+        "__locale": "cpp"
     },
     "python.linting.pylintArgs": [
         "/home/lisen/.local/lib/python3.7/site-packages/pylint",
